@@ -2,19 +2,27 @@ from clientes import alta_cliente, listar_clientes
 from turnos import alta_turno, listar_turnos
 
 def mostrar_menu():
-    print("\n=== Gestor de Turnos ===")
-    print("1) Alta Cliente")
-    print("2) Listado de Clientes")
-    print("3) Alta Turno")
-    print("4) Listado de Turnos")
-    print("0) Salir")
+    print(
+                "\n"
+                "┌──────────────────────────────────────────────────┐\n"
+                "│            === Gestor de Turnos ===              │\n"
+                "│                                                  │\n"
+                "│ Menu Principal                                   │\n"
+                "│                                                  │\n"
+                "│ 1- Alta de Cliente                               │\n"
+                "│ 2- Listado de Clientes                           │\n"
+                "│ 3- Alta de Turno                                 │\n"
+                "│ 4- Listado de Turnos                             │\n"
+                "│ 0- Salir                                         │\n"
+                "└──────────────────────────────────────────────────┘"
+        )
 
 def run_loop():
     clientes = []
     turnos = []
     while True:
         mostrar_menu()
-        opcion = input("Opción: ")
+        opcion = input("\nOpción: ")
 
         if opcion == "1":
             print("\n--- Alta de Cliente ---")
@@ -35,9 +43,7 @@ def run_loop():
             fecha = input("Fecha: ")
             hora = input("Hora: ")
             tipo = input("Tipo de turno: ")
-            turno = {"cliente_dni": dni, "fecha": fecha, "hora": hora, "tipo": tipo, "estado": "Activo"}
-            turnos.append(turno)
-            print("Turno registrado")
+            alta_turno(turnos,dni,fecha,hora,tipo)
 
         elif opcion == "4":
             print("\n--- Listado de Turnos ---")
