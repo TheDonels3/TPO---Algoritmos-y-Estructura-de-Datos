@@ -22,7 +22,7 @@ def run_loop():
     turnos = []
     while True:
         mostrar_menu()
-        opcion = input("Opción: ")
+        opcion = input("\nOpción: ")
 
         if opcion == "1":
             print("\n--- Alta de Cliente ---")
@@ -43,7 +43,7 @@ def run_loop():
             fecha = input("Fecha: ")
             hora = input("Hora: ")
             tipo = input("Tipo de turno: ")
-            alta_turno(turnos,clientes,dni,fecha,hora,tipo)
+            alta_turno(turnos,dni,fecha,hora,tipo)
 
         elif opcion == "4":
             print("\n--- Listado de Turnos ---")
