@@ -27,7 +27,10 @@ def run_loop():
     
         elif opcion == "2":
             print("\n--- Listado de Clientes ---")
-            listar_clientes(clientes)
+            if len(clientes) == 0:
+                print("No hay clientes registrados")
+            else:
+                listar_clientes(clientes)
 
         elif opcion == "3":
             print("\n--- Alta de Turno ---")
@@ -40,8 +43,8 @@ def run_loop():
             print("Turno registrado")
 
         elif opcion == "4":
-            for t in turnos:
-                print(t)
+            print("\n--- Listado de Turnos ---")
+            listar_turnos(turnos)
 
         elif opcion == "0":
             print("¡Chau!")
