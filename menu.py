@@ -2,12 +2,20 @@ from clientes import alta_cliente, listar_clientes
 from turnos import alta_turno, listar_turnos
 
 def mostrar_menu():
-    print("\n=== Gestor de Turnos ===")
-    print("1) Alta Cliente")
-    print("2) Listado de Clientes")
-    print("3) Alta Turno")
-    print("4) Listado de Turnos")
-    print("0) Salir")
+    print(
+                "\n"
+                "┌──────────────────────────────────────────────────┐\n"
+                "│            === Gestor de Turnos ===              │\n"
+                "│                                                  │\n"
+                "│ Menu Principal                                   │\n"
+                "│                                                  │\n"
+                "│ 1- Alta de Cliente                               │\n"
+                "│ 2- Listado de Clientes                           │\n"
+                "│ 3- Alta de Turno                                 │\n"
+                "│ 4- Listado de Turnos                             │\n"
+                "│ 0- Salir                                         │\n"
+                "└──────────────────────────────────────────────────┘"
+        )
 
 def run_loop():
     clientes = []
