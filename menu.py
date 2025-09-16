@@ -35,9 +35,7 @@ def run_loop():
             fecha = input("Fecha: ")
             hora = input("Hora: ")
             tipo = input("Tipo de turno: ")
-            turno = {"cliente_dni": dni, "fecha": fecha, "hora": hora, "tipo": tipo, "estado": "Activo"}
-            turnos.append(turno)
-            print("Turno registrado")
+            alta_turno(turnos,clientes,dni,fecha,hora,tipo)
 
         elif opcion == "4":
             print("\n--- Listado de Turnos ---")
