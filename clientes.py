@@ -7,6 +7,10 @@ def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
 
 
 def listar_clientes(clientes):
+    if len(clientes) == 0:
+        print("No hay clientes registrados.")
+        return
+    
     for cliente in clientes:
-        print(f"{cliente['nombre']} {cliente['apellido']} - DNI: {cliente['dni']}")
+        print(f"DNI: {cliente['dni']} | {cliente['nombre']} {cliente['apellido']} | Email: {cliente['email']} | Tel: {cliente['telefono']}")
 

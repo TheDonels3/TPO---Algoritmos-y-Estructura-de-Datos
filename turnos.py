@@ -6,4 +6,9 @@ def alta_turno(turnos, clientes, cliente_dni, fecha, hora, tipo):
     print(("✔ Turno registrado"))
 
 def listar_turnos(turnos):
-    return turnos
+    if len(turnos) == 0:
+        print("No hay turnos registrados.")
+        return
+     
+    for turno in turnos:
+        print(f"DNI: {turno['cliente_dni']} - Fecha: {turno['fecha']} - Hora: {turno['hora']} - Tipo: {turno['tipo']} - Estado: {turno['estado']}")
