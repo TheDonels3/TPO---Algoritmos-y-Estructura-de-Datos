@@ -1,25 +1,44 @@
 from clientes import alta_cliente, listar_clientes
 from turnos import alta_turno, listar_turnos
+from utils import limpiar_pantalla
+
+
+def mostrar_bienvenida():
+    print(
+        "\n"
+        "┌──────────────────────────────────────────────────┐\n"
+        "│     === BIENVENIDO AL GESTOR DE TURNOS ===       │\n"
+        "└──────────────────────────────────────────────────┘"
+    )
+    input("Presione Enter para continuar...")
+    limpiar_pantalla()
+
 
 def mostrar_menu():
     print(
-                "\n"
-                "┌──────────────────────────────────────────────────┐\n"
-                "│            === Gestor de Turnos ===              │\n"
-                "│                                                  │\n"
-                "│ Menu Principal                                   │\n"
-                "│                                                  │\n"
-                "│ 1- Alta de Cliente                               │\n"
-                "│ 2- Listado de Clientes                           │\n"
-                "│ 3- Alta de Turno                                 │\n"
-                "│ 4- Listado de Turnos                             │\n"
-                "│ 0- Salir                                         │\n"
-                "└──────────────────────────────────────────────────┘"
-        )
+        "\n"
+        "┌──────────────────────────────────────────────────┐\n"
+        "│            === Gestor de Turnos ===              │\n"
+        "│                                                  │\n"
+        "│ Menu Principal                                   │\n"
+        "│                                                  │\n"
+        "│ 1- Alta de Cliente                               │\n"
+        "│ 2- Listado de Clientes                           │\n"
+        "│ 3- Alta de Turno                                 │\n"
+        "│ 4- Listado de Turnos                             │\n"
+        "│ 0- Salir                                         │\n"
+        "└──────────────────────────────────────────────────┘"
+    )
+
+
 
 def run_loop():
     clientes = []
     turnos = []
+
+    # Mostrar bienvenida una sola vez
+    mostrar_bienvenida()
+
     while True:
         mostrar_menu()
         opcion = input("\nOpción: ")
@@ -50,8 +69,10 @@ def run_loop():
             listar_turnos(turnos)
 
         elif opcion == "0":
-            print("¡Chau!")
+            print("\n¡Chau!")
             break
 
         else:
-            print("Opción inválida")
+            print("\nOpción inválida")
+            input("Presione Enter para continuar...")
+            limpiar_pantalla()
