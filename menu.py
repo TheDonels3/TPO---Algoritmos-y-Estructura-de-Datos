@@ -1,4 +1,4 @@
-from clientes import alta_cliente, listar_clientes
+from clientes import alta_cliente, listar_clientes, modificar_cliente
 from turnos import alta_turno, listar_turnos
 from utils import limpiar_pantalla
 
@@ -26,6 +26,7 @@ def mostrar_menu():
         "│ 2- Listado de Clientes                           │\n"
         "│ 3- Alta de Turno                                 │\n"
         "│ 4- Listado de Turnos                             │\n"
+        "│ 5- Modificar cliente                             │\n"
         "│ 0- Salir                                         │\n"
         "└──────────────────────────────────────────────────┘"
     )
@@ -67,6 +68,10 @@ def run_loop():
         elif opcion == "4":
             print("\n--- Listado de Turnos ---")
             listar_turnos(turnos)
+
+        elif opcion == "5":
+            print("\n--- Modificacion de cliente ---")
+            modificar_cliente(clientes)
 
         elif opcion == "0":
             print("\n¡Chau!")
