@@ -3,7 +3,7 @@
 
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-# from turnos import alta_turno, listar_turnos, listar_por_cliente, listar_por_fecha, modificar_turno, eliminar_turno, bloquear_slot, desbloquear_slot
+from turnos import alta_turno, listar_turnos
 from storage import clientes
 # from notificaciones import ver_log
 # import demo_data  # carga data demo
@@ -103,10 +103,10 @@ def run_loop():
                     listar_turnos()
                 elif opc == "3":
                     dni = input("DNI: ").strip()
-                    listar_por_cliente(dni)
+                    # listar_por_cliente(dni)
                 elif opc == "4":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
-                    listar_por_fecha(fecha)
+                    # listar_por_fecha(fecha)
                 elif opc == "5":
                     try:
                         tid = int(input("ID de turno: ").strip())
@@ -115,21 +115,21 @@ def run_loop():
                     nuevo_dni = input("Nuevo DNI (vacío=no cambia): ").strip() or None
                     nueva_fecha = input("Nueva fecha (YYYY-MM-DD, vacío=no): ").strip() or None
                     nueva_hora = input("Nueva hora (HH:mm, vacío=no): ").strip() or None
-                    modificar_turno(clientes, tid, nuevo_dni, nueva_fecha, nueva_hora)
+                    # modificar_turno(clientes, tid, nuevo_dni, nueva_fecha, nueva_hora)
                 elif opc == "6":
                     try:
                         tid = int(input("ID de turno a eliminar: ").strip())
                     except ValueError:
                         print("ID inválido."); input("Enter..."); limpiar_pantalla(); continue
-                    eliminar_turno(tid)
+                    # eliminar_turno(tid)
                 elif opc == "7":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
-                    bloquear_slot(fecha, hora)
+                    # bloquear_slot(fecha, hora)
                 elif opc == "8":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
-                    desbloquear_slot(fecha, hora)
+                    # desbloquear_slot(fecha, hora)
                 elif opc == "0":
                     limpiar_pantalla(); break
                 else:
