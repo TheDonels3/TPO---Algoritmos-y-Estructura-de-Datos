@@ -5,6 +5,7 @@ from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, listar_turnos
 from storage import clientes
+
 # from notificaciones import ver_log
 # import demo_data  # carga data demo
 

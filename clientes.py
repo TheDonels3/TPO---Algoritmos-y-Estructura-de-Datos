@@ -1,7 +1,11 @@
 from utils import limpiar_pantalla, validar_dni
+from storage import guardar_clientes, cargar_clientes
 
 def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
     try:
+
+        clientes = cargar_clientes()
+    
         if not validar_dni(dni):
             print("✖ DNI inválido. Deben ser 7 u 8 dígitos.")
             input("\nEnter para continuar..."); limpiar_pantalla(); return
@@ -18,6 +22,7 @@ def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
             "telefono": (telefono or "").strip(),
             "activo": True
         }
+        guardar_clientes(clientes) 
         print("✔ Cliente registrado.")
     except AttributeError:
         print("✖ Error: Valores inválidos proporcionados.")
@@ -28,6 +33,9 @@ def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
 
 def listar_clientes(clientes, solo_activos=False):
     try:
+        # Recargar clientes desde el archivo JSON para tener datos actualizados
+        clientes_actualizados = cargar_clientes()
+
         if not clientes:
             print("No hay clientes registrados.")
             input("\nEnter para continuar..."); limpiar_pantalla(); return
@@ -47,6 +55,9 @@ def listar_clientes(clientes, solo_activos=False):
 
 def modificar_cliente(clientes, dni):
     try:
+
+        clientes = cargar_clientes()
+
         c = clientes.get(dni)
         if not c:
             print("✖ No existe un cliente con ese DNI.")
@@ -63,6 +74,7 @@ def modificar_cliente(clientes, dni):
             c['activo'] = (activo_in == 's')
         
         c.update({"nombre":nombre, "apellido":apellido, "email":email, "telefono":tel})
+        guardar_clientes(clientes)
         print("✔ Cliente actualizado.")
     except KeyError as e:
         print(f"✖ Error: Campo faltante en cliente: {e}")
@@ -74,13 +86,16 @@ def modificar_cliente(clientes, dni):
         input("\nEnter para continuar..."); limpiar_pantalla()
 
 def baja_logica_cliente(clientes, dni):
+
     try:
+        clientes = cargar_clientes()
         c = clientes.get(dni)
         if not c:
             print("✖ No existe un cliente con ese DNI.")
             input("\nEnter..."); limpiar_pantalla(); return
             
         c["activo"] = False
+        guardar_clientes(clientes)
         print("✔ Baja lógica aplicada (cliente inactivo).")
     except KeyError:
         print("✖ Error: Estructura de cliente inválida.")
@@ -91,8 +106,10 @@ def baja_logica_cliente(clientes, dni):
 
 def baja_fisica_cliente(clientes, dni):
     try:
+        clientes = cargar_clientes()
         if dni in clientes:
             del clientes[dni]
+            guardar_clientes(clientes)
             print("✔ Cliente eliminado físicamente.")
         else:
             print("✖ No existe un cliente con ese DNI.")
