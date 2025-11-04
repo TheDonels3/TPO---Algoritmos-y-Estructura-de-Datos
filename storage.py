@@ -13,9 +13,15 @@ def cargar_clientes():
     if os.path.exists(CLIENTES_JSON):
         try:
             with open(CLIENTES_JSON, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                contenido = f.read().strip()
+                if not contenido:
+                    return {}
+                return json.loads(contenido)
         except (json.JSONDecodeError, IOError) as e:
             print(f"⚠ Error al cargar clientes: {e}. Iniciando con diccionario vacío.")
+            return {}
+        except IOError as e:
+            print(f"⚠ Error al leer el archivo de clientes: {e}. Iniciando con diccionario vacío.")
             return {}
     return {}
 

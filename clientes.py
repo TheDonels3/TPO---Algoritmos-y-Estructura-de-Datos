@@ -34,7 +34,7 @@ def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
 def listar_clientes(clientes, solo_activos=False):
     try:
         # Recargar clientes desde el archivo JSON para tener datos actualizados
-        clientes_actualizados = cargar_clientes()
+        # clientes_actualizados = cargar_clientes()
 
         if not clientes:
             print("No hay clientes registrados.")
@@ -56,7 +56,7 @@ def listar_clientes(clientes, solo_activos=False):
 def modificar_cliente(clientes, dni):
     try:
 
-        clientes = cargar_clientes()
+        # clientes = cargar_clientes()
 
         c = clientes.get(dni)
         if not c:

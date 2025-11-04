@@ -1,0 +1,18 @@
+{
+  "34137129": {
+    "dni": "34137129",
+    "nombre": "Walter",
+    "apellido": "Navarrete",
+    "email": "walter@gmail.com",
+    "telefono": "1537588933",
+    "activo": false
+  },
+  "22344567": {
+    "dni": "22344567",
+    "nombre": "Mateo",
+    "apellido": "Ruiz",
+    "email": "correo@gmail.com",
+    "telefono": "33445566",
+    "activo": true
+  }
+}
