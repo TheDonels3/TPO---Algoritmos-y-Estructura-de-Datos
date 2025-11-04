@@ -75,20 +75,20 @@ def run_loop():
                     apellido = input("Apellido: ").strip()
                     email = input("Email (opcional): ").strip()
                     tel = input("Teléfono (opcional): ").strip()
-                    alta_cliente(clientes, dni, nombre, apellido, email, tel)
+                    alta_cliente(dni, nombre, apellido, email, tel)
                 elif opc == "2":
-                    listar_clientes(clientes, solo_activos=False)
+                    listar_clientes(solo_activos=False)
                 elif opc == "3":
-                    listar_clientes(clientes, solo_activos=True)
+                    listar_clientes(solo_activos=True)
                 elif opc == "4":
                     dni = input("DNI a modificar: ").strip()
-                    modificar_cliente(clientes, dni)
+                    modificar_cliente(dni)
                 elif opc == "5":
                     dni = input("DNI para baja lógica: ").strip()
-                    baja_logica_cliente(clientes, dni)
+                    baja_logica_cliente(dni)
                 elif opc == "6":
                     dni = input("DNI para baja física: ").strip()
-                    baja_fisica_cliente(clientes, dni)
+                    baja_fisica_cliente(dni)
                 elif opc == "0":
                     limpiar_pantalla(); break
                 else:

@@ -1,7 +1,7 @@
 from utils import limpiar_pantalla, validar_dni
 from storage import guardar_clientes, cargar_clientes
 
-def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
+def alta_cliente(dni, nombre, apellido, email, telefono):
     try:
 
         clientes = cargar_clientes()
@@ -31,10 +31,10 @@ def alta_cliente(clientes, dni, nombre, apellido, email, telefono):
     finally:
         input("\nEnter para continuar..."); limpiar_pantalla()
 
-def listar_clientes(clientes, solo_activos=False):
+def listar_clientes(solo_activos=False):
     try:
         # Recargar clientes desde el archivo JSON para tener datos actualizados
-        # clientes_actualizados = cargar_clientes()
+        clientes = cargar_clientes()
 
         if not clientes:
             print("No hay clientes registrados.")
@@ -53,10 +53,9 @@ def listar_clientes(clientes, solo_activos=False):
     finally:
         input("\nEnter para continuar..."); limpiar_pantalla()
 
-def modificar_cliente(clientes, dni):
+def modificar_cliente(dni):
     try:
-
-        # clientes = cargar_clientes()
+        clientes = cargar_clientes()
 
         c = clientes.get(dni)
         if not c:
@@ -74,6 +73,7 @@ def modificar_cliente(clientes, dni):
             c['activo'] = (activo_in == 's')
         
         c.update({"nombre":nombre, "apellido":apellido, "email":email, "telefono":tel})
+        
         guardar_clientes(clientes)
         print("✔ Cliente actualizado.")
     except KeyError as e:
@@ -85,7 +85,7 @@ def modificar_cliente(clientes, dni):
     finally:
         input("\nEnter para continuar..."); limpiar_pantalla()
 
-def baja_logica_cliente(clientes, dni):
+def baja_logica_cliente(dni):
 
     try:
         clientes = cargar_clientes()
@@ -104,7 +104,7 @@ def baja_logica_cliente(clientes, dni):
     finally:
         input("\nEnter para continuar..."); limpiar_pantalla()
 
-def baja_fisica_cliente(clientes, dni):
+def baja_fisica_cliente(dni):
     try:
         clientes = cargar_clientes()
         if dni in clientes:
