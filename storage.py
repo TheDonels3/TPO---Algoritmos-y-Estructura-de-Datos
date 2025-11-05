@@ -3,8 +3,8 @@ import json
 import os
 
 # Rutas de archivos JSON
-CLIENTES_JSON = "clientes.json"
-TURNS_JSON = "turnos.json"
+CLIENTES_JSON = "archivos/clientes.json"
+TURNS_JSON = "archivos/turnos.json"
 
 # ========== FUNCIONES DE PERSISTENCIA PARA CLIENTES ==========
 
