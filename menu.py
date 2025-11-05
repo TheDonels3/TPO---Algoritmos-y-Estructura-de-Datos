@@ -4,12 +4,7 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, listar_turnos
-from storage import cargar_clientes
 
-clientes = cargar_clientes()
-
-# from notificaciones import ver_log
-# import demo_data  # carga data demo
 
 def mostrar_bienvenida():
     print(
@@ -101,7 +96,7 @@ def run_loop():
                     dni = input("DNI cliente: ").strip()
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
-                    alta_turno(clientes, dni, fecha, hora)
+                    alta_turno(dni, fecha, hora)
                 elif opc == "2":
                     listar_turnos()
                 elif opc == "3":

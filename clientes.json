@@ -14,5 +14,13 @@
     "email": "correo@gmail.com",
     "telefono": "33445566",
     "activo": true
+  },
+  "44556677": {
+    "dni": "44556677",
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "email": "",
+    "telefono": "",
+    "activo": true
   }
 }

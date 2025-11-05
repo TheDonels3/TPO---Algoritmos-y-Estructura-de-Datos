@@ -35,7 +35,7 @@ def guardar_clientes(clientes_dict):
         print(f"✖ Error al guardar clientes: {e}")
         return False
 # Diccionario de clientes: {dni: {datos del cliente}}
-clientes = {}
+# clientes = {}
 
 # Lista de turnos
 turnos = []
