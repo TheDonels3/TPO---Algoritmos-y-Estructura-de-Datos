@@ -1,4 +1,3 @@
-# utils.py
 import os
 import re
 from datetime import datetime
@@ -6,31 +5,41 @@ from datetime import datetime
 def limpiar_pantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# Validaciones simples
-RE_DNI = re.compile(r"^\d{7,8}$")  # DNI argentino simple (7 u 8 dígitos)
-RE_HORA = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$")  # HH:mm 00..23:00..59
-RE_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")  # YYYY-MM-DD
 
-def hoy_str():
-    return datetime.now().strftime("%Y-%m-%d")
+# Validaciones simples con expresiones regulares
+RE_DNI = re.compile(r"^\d{7,8}$")  # DNI argentino simple (7 u 8 digitos)
+RE_HORA = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$")  # HH:mm entre 00:00 y 23:59
+RE_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")  # Formato YYYY-MM-DD
 
-def validar_dni(dni:str)->bool:
+
+# Devuelve True si el DNI cumple el formato, False si no
+def validar_dni(dni: str) -> bool:
     return bool(RE_DNI.match(dni))
 
-def validar_fecha(fecha:str)->bool:
+
+# Valida que la fecha cumpla el formato y sea una fecha valida
+def validar_fecha(fecha: str) -> bool:
     if not RE_FECHA.match(fecha):
         return False
+    
+    # Intenta convertir la cadena a fecha para verificar que sea valida
     try:
         datetime.strptime(fecha, "%Y-%m-%d")
         return True
+    
+    # Si hay error al convertir, la fecha no es valida
     except ValueError:
         return False
 
-def validar_hora(hora:str)->bool:
+
+ # Devuelve True si la hora cumple el formato HH:mm, False si no
+def validar_hora(hora) -> bool:
     return bool(RE_HORA.match(hora))
 
-def comparar_fecha_str(a:str, b:str)->int:
-    # Retorna -1 si a<b, 0 si igual, 1 si a>b
+
+# Compara dos fechas en formato YYYY-MM-DD
+# Retorna -1 si a < b, 0 si son iguales, 1 si a > b
+def comparar_fecha_str(a, b) -> int:
     da = tuple(map(int, a.split("-")))
     db = tuple(map(int, b.split("-")))
-    return (da>db) - (da<db)
+    return (da > db) - (da < db)
