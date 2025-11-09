@@ -95,29 +95,22 @@ def alta_turno(clientes, dni, fecha, hora):
 # FUNCIÓN: LISTAR TURNOS
 # ---------------------------------------------------------
 
-def listar_turnos(turnos):
+def listar_turnos():
     """
     Muestra todos los turnos registrados en pantalla.
     Si no hay turnos, informa al usuario.
     """
 
     # Si no hay turnos, se muestra un mensaje y se limpia la pantalla
-    if len(turnos) == 0:
+    if not turnos:
         print("No hay turnos registrados.")
         input("\nPresione Enter para continuar...")
         limpiar_pantalla()
         return
      
-    # Recorre la lista de turnos y muestra la información de cada uno
-    for turno in turnos:
-        print(
-            f"DNI: {turno['cliente_dni']} - "
-            f"Fecha: {turno['fecha']} - "
-            f"Hora: {turno['hora']} - "
-            f"Tipo: {turno['tipo']} - "
-            f"Estado: {turno['estado']}"
-        )
-
+    # Recorre la lista de turnos (ordenada por fecha y hora) y muestra la información de cada uno
+    for t in sorted(turnos, key=lambda x: (x["fecha"], x["hora"])):
+        print(f"#{t['id']} | {t['fecha']} {t['hora']} | DNI {t['dni']} | {t['estado']}")
     # Pausa para que el usuario lea la lista antes de limpiar la pantalla
     input("\nPresione Enter para continuar...")
     limpiar_pantalla()

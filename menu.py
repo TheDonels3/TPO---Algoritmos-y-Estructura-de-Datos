@@ -4,6 +4,7 @@ from turnos import alta_turno, listar_turnos
 from storage import turnos
 
 
+
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
 def mostrar_bienvenida():
     print(
@@ -192,7 +193,7 @@ def run_loop():
         # ---------------- LOG ----------------
         # Mostrar registro de logs o notificaciones (a implementar)
         elif op == "3":
-            ver_log()
+            ##ver_log()
             input("\nEnter para continuar...")
             limpiar_pantalla()
 
