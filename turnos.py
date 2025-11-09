@@ -7,17 +7,17 @@ from storage import turnos, bloqueos_por_fecha, next_turno_id
 # ---------------------------------------------------------
 
 # Verifica si ya existe un turno ocupado en una fecha y hora determinada
-def _existe_turno_en_slot(fecha, hora) -> bool:
+def _existe_turno_en_slot(fecha, hora):
     return any(t for t in turnos if t["fecha"] == fecha and t["hora"] == hora and t["estado"] == "Ocupado")
 
 
 # Verifica si un horario específico está bloqueado para una fecha
-def _slot_bloqueado(fecha, hora) -> bool:
+def _slot_bloqueado(fecha, hora):
     return hora in bloqueos_por_fecha.get(fecha, set())
 
 
 # Verifica si un cliente con un DNI dado está activo en el sistema
-def _cliente_activo(clientes, dni) -> bool:
+def _cliente_activo(clientes, dni):
     c = clientes.get(dni)
     return bool(c and c.get("activo", False))
 

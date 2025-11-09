@@ -1,6 +1,7 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, listar_turnos
+from storage import turnos
 
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
@@ -132,9 +133,9 @@ def run_loop():
                     hora = input("Hora (HH:mm): ").strip()
                     alta_turno(dni, fecha, hora)
 
-                 # Listar todos los turnos
+                # Listar todos los turnos
                 elif opc == "2":
-                    listar_turnos()
+                    listar_turnos(turnos)
 
                 # Listar turnos por DNI (a implementar)
                 elif opc == "3":

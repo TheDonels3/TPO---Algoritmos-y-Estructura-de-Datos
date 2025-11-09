@@ -13,12 +13,12 @@ RE_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")  # Formato YYYY-MM-DD
 
 
 # Devuelve True si el DNI cumple el formato, False si no
-def validar_dni(dni: str) -> bool:
+def validar_dni(dni):
     return bool(RE_DNI.match(dni))
 
 
 # Valida que la fecha cumpla el formato y sea una fecha valida
-def validar_fecha(fecha: str) -> bool:
+def validar_fecha(fecha):
     if not RE_FECHA.match(fecha):
         return False
     
@@ -33,13 +33,13 @@ def validar_fecha(fecha: str) -> bool:
 
 
  # Devuelve True si la hora cumple el formato HH:mm, False si no
-def validar_hora(hora) -> bool:
+def validar_hora(hora):
     return bool(RE_HORA.match(hora))
 
 
 # Compara dos fechas en formato YYYY-MM-DD
 # Retorna -1 si a < b, 0 si son iguales, 1 si a > b
-def comparar_fecha_str(a, b) -> int:
+def comparar_fecha_str(a, b):
     da = tuple(map(int, a.split("-")))
     db = tuple(map(int, b.split("-")))
     return (da > db) - (da < db)

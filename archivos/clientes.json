@@ -22,5 +22,13 @@
     "email": "",
     "telefono": "",
     "activo": true
+  },
+  "46586383": {
+    "dni": "46586383",
+    "nombre": "Daniel",
+    "apellido": "Dere",
+    "email": "danieldere4117@gmail.com",
+    "telefono": "1144377965",
+    "activo": true
   }
 }
