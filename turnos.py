@@ -1,5 +1,5 @@
 from utils import limpiar_pantalla, validar_fecha, validar_hora
-from storage import turnos, bloqueos_por_fecha, next_turno_id
+from storage import turnos, bloqueos_por_fecha, next_turno_id, cargar_clientes
 
 
 # ---------------------------------------------------------
@@ -26,7 +26,7 @@ def _cliente_activo(clientes, dni):
 # FUNCIÓN PRINCIPAL: ALTA DE TURNO
 # ---------------------------------------------------------
 
-def alta_turno(clientes, dni, fecha, hora):
+def alta_turno(dni, fecha, hora):
     """
     Registra un nuevo turno para un cliente, si pasa todas las validaciones:
     - Fecha válida
@@ -36,6 +36,7 @@ def alta_turno(clientes, dni, fecha, hora):
     - Horario no ocupado
     """
 
+    clientes = cargar_clientes()
     # Validación del formato de fecha (debe ser YYYY-MM-DD)
     if not validar_fecha(fecha):
         print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
