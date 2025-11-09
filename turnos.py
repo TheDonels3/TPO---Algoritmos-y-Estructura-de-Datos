@@ -112,6 +112,29 @@ def listar_turnos():
     # Recorre la lista de turnos (ordenada por fecha y hora) y muestra la información de cada uno
     for t in sorted(turnos, key=lambda x: (x["fecha"], x["hora"])):
         print(f"#{t['id']} | {t['fecha']} {t['hora']} | DNI {t['dni']} | {t['estado']}")
-    # Pausa para que el usuario lea la lista antes de limpiar la pantalla
+    
     input("\nPresione Enter para continuar...")
     limpiar_pantalla()
+
+# ---------------------------------------------------------
+# FUNCIÓN: LISTAR POR FECHA
+# ---------------------------------------------------------
+
+def listar_por_fecha(fecha):
+    """
+    Muestra todos los turnos en pantalla que conicidan con la fecha ingresada por parametro.
+    """
+    if not validar_fecha(fecha):
+        print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+        input("\nEnter...")
+        limpiar_pantalla()
+        return
+    lista_fecha = [t for t in turnos if t["fecha"]==fecha]
+    if not lista_fecha:
+        print("No hay turnos para esa fecha.")
+    for t in sorted(lista_fecha, key=lambda x: x["hora"]):
+        print(f"#{t['id']} | {t['hora']} | DNI {t['dni']} | {t['estado']}")
+    
+    input("\nEnter para continuar...")
+    limpiar_pantalla()
+

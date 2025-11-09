@@ -1,6 +1,6 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-from turnos import alta_turno, listar_turnos
+from turnos import alta_turno, listar_turnos, listar_por_fecha
 from storage import turnos
 
 
@@ -136,16 +136,17 @@ def run_loop():
 
                 # Listar todos los turnos
                 elif opc == "2":
-                    listar_turnos(turnos)
+                    listar_turnos()
 
                 # Listar turnos por DNI (a implementar)
                 elif opc == "3":
 
                     dni = input("DNI: ").strip()
 
-                # Listar turnos por fecha (a implementar)
+                # Listar turnos por fecha
                 elif opc == "4":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
+                    listar_por_fecha(fecha)
 
                 # Modificar un turno existente
                 elif opc == "5":
