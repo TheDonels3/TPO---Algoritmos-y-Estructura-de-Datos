@@ -132,7 +132,7 @@ def run_loop():
                     dni = input("DNI cliente: ").strip()
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
-                    alta_turno(dni, fecha, hora)
+                    alta_turno(turnos, dni, fecha, hora)
 
                 # Listar todos los turnos
                 elif opc == "2":
