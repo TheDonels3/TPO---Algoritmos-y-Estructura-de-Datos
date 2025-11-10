@@ -45,10 +45,11 @@ turnos = []
 
 def _obtener_next_turno_id(turnos):
     """Calcula el siguiente ID de turno basándose en el ID máximo existente."""
+    # Encuentra el máximo ID y le suma 1
     if not turnos:
         return 1
-    # Encuentra el máximo ID y le suma 1
-    return max(t.get("id") for t in turnos) + 1
+    else:
+        return max((t.get("id") for t in turnos)) + 1
 
 def cargar_turnos():
     """Carga turnos desde el archivo JSON y devuelve la lista de turnos."""

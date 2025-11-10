@@ -35,7 +35,7 @@ def alta_turno(dni, fecha, hora):
     - Horario no bloqueado
     - Horario no ocupado
     """
-
+    
     clientes = cargar_clientes()
     turnos = cargar_turnos()
     next_id = _obtener_next_turno_id(turnos)
@@ -146,3 +146,45 @@ def listar_por_fecha(fecha):
     input("\nEnter para continuar...")
     limpiar_pantalla()
 
+
+# ---------------------------------------------------------
+# FUNCIÓN: DESBLOQUEAR_SLOT
+# ---------------------------------------------------------
+
+def desbloquear_slot(fecha, hora):
+
+    turnos = cargar_turnos()
+
+    # Validaciones
+    if not validar_fecha(fecha):
+        print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+        input("\nEnter...")
+        limpiar_pantalla()
+        return
+
+    if not validar_hora(hora):
+        print("✖ Hora inválida. Formato esperado HH:mm.")
+        input("\nEnter...")
+        limpiar_pantalla()
+        return
+
+
+    # Busca el turno que coincida con la fecha y la hora indicadas
+    for turno in turnos:
+        if turno["fecha"] == fecha and turno["hora"] == hora:
+
+            # Si el turno está ocupado, lo "desbloquea"
+            if turno["estado"] == "Ocupado":
+
+                turno["dni"] = "Sin Asignar"
+                turno["estado"] = "Libre"
+                print(f"✔ Turno {fecha} {hora} desbloqueado.")
+                return
+            
+            # Si el turno ya estaba libre, informa que no se puede desbloquear
+            else:
+                print(f"✖ El turno {fecha} {hora} no está bloqueado.")
+                return
+            
+    # En caso de no encontrar el turno lo informa
+    print(f"✖ No se encontró el turno {fecha} {hora}.")

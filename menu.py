@@ -1,6 +1,6 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-from turnos import alta_turno, listar_turnos, listar_por_fecha
+from turnos import alta_turno, listar_turnos, listar_por_fecha, desbloquear_slot
 
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
@@ -180,6 +180,7 @@ def run_loop():
                 elif opc == "8":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
+                    desbloquear_slot(fecha, hora)
                 
                  # Volver al menu principal
                 elif opc == "0":
