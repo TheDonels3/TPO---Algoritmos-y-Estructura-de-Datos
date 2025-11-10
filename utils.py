@@ -1,6 +1,5 @@
 import os
 import re
-from datetime import datetime
 
 def limpiar_pantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -19,27 +18,41 @@ def validar_dni(dni):
 
 # Valida que la fecha cumpla el formato y sea una fecha valida
 def validar_fecha(fecha):
-    if not RE_FECHA.match(fecha):
-        return False
     
-    # Intenta convertir la cadena a fecha para verificar que sea valida
-    try:
-        datetime.strptime(fecha, "%Y-%m-%d")
-        return True
-    
-    # Si hay error al convertir, la fecha no es valida
-    except ValueError:
-        return False
+    # Variables
+    MAX_ANIO = 2027
+    MIN_ANIO = 2025
+    esValido = True
+    meses = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    # Validar formato
+    if not bool(RE_FECHA.match(fecha)):
+        esValido = False
+        
+    else:
+        anio = int(fecha[0:4])
+        mes = int(fecha[5:7])
+        dia = int(fecha[8:10])
+
+        # Año bisiesto 
+        if (anio % 4 == 0 and (anio % 100 != 0 or anio % 400 == 0)):
+            meses[1] = 29
+
+        # Rango de año
+        if (anio < MIN_ANIO or anio > MAX_ANIO):
+            esValido = False
+
+        # Rango de mes
+        if not (1 <= mes <= 12):
+            esValido = False
+        
+        #Rango de Dias
+        elif not (1 <= dia <= meses[mes - 1]):
+            esValido = False
+
+    return esValido
 
 
- # Devuelve True si la hora cumple el formato HH:mm, False si no
+# Devuelve True si la hora cumple el formato HH:mm, False si no
 def validar_hora(hora):
     return bool(RE_HORA.match(hora))
-
-
-# Compara dos fechas en formato YYYY-MM-DD
-# Retorna -1 si a < b, 0 si son iguales, 1 si a > b
-def comparar_fecha_str(a, b):
-    da = tuple(map(int, a.split("-")))
-    db = tuple(map(int, b.split("-")))
-    return (da > db) - (da < db)
