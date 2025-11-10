@@ -1,5 +1,5 @@
 from utils import limpiar_pantalla, validar_fecha, validar_hora
-from storage import turnos, bloqueos_por_fecha, next_turno_id, cargar_clientes
+from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes
 
 
 # ---------------------------------------------------------
@@ -7,7 +7,7 @@ from storage import turnos, bloqueos_por_fecha, next_turno_id, cargar_clientes
 # ---------------------------------------------------------
 
 # Verifica si ya existe un turno ocupado en una fecha y hora determinada
-def _existe_turno_en_slot(fecha, hora):
+def _existe_turno_en_slot(turnos, fecha, hora):
     return any(t for t in turnos if t["fecha"] == fecha and t["hora"] == hora and t["estado"] == "Ocupado")
 
 
@@ -37,6 +37,9 @@ def alta_turno(dni, fecha, hora):
     """
 
     clientes = cargar_clientes()
+    turnos = cargar_turnos()
+    next_id = _obtener_next_turno_id(turnos)
+
     # Validación del formato de fecha (debe ser YYYY-MM-DD)
     if not validar_fecha(fecha):
         print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
@@ -66,7 +69,7 @@ def alta_turno(dni, fecha, hora):
         return
     
     # Verificación de que no exista ya un turno ocupado en ese horario
-    if _existe_turno_en_slot(fecha, hora):
+    if _existe_turno_en_slot(turnos, fecha, hora):
         print("✖ El horario ya está OCUPADO.")
         input("\nEnter...")
         limpiar_pantalla()
@@ -74,7 +77,7 @@ def alta_turno(dni, fecha, hora):
 
     # Si todas las validaciones pasan, se crea el turno y se guarda
     t = {
-        "id": next_turno_id(),   # Se genera un nuevo ID único
+        "id": next_id,           # Se genera un nuevo ID único
         "dni": dni,              # DNI del cliente
         "fecha": fecha,          # Fecha del turno
         "hora": hora,            # Hora del turno
@@ -83,6 +86,7 @@ def alta_turno(dni, fecha, hora):
 
     # Se agrega el turno a la lista global de turnos
     turnos.append(t)
+    guardar_turnos(turnos)
     print("✔ Turno registrado correctamente.")
     
     # (Opcional) Llamada a una función para confirmar turno por mensaje o correo
@@ -101,6 +105,7 @@ def listar_turnos():
     Muestra todos los turnos registrados en pantalla.
     Si no hay turnos, informa al usuario.
     """
+    turnos = cargar_turnos()
 
     # Si no hay turnos, se muestra un mensaje y se limpia la pantalla
     if not turnos:
@@ -129,6 +134,9 @@ def listar_por_fecha(fecha):
         input("\nEnter...")
         limpiar_pantalla()
         return
+    
+    turnos = cargar_turnos()
+
     lista_fecha = [t for t in turnos if t["fecha"]==fecha]
     if not lista_fecha:
         print("No hay turnos para esa fecha.")

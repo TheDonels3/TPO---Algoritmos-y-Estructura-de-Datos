@@ -1,8 +1,6 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, listar_turnos, listar_por_fecha
-from storage import turnos
-
 
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
