@@ -1,7 +1,6 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot
-
+from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
 def mostrar_bienvenida():
@@ -136,10 +135,10 @@ def run_loop():
                 elif opc == "2":
                     listar_turnos()
 
-                # Listar turnos por DNI (a implementar)
+                # Listar turnos por DNI
                 elif opc == "3":
-
                     dni = input("DNI: ").strip()
+                    listar_por_dni(dni)
 
                 # Listar turnos por fecha
                 elif opc == "4":

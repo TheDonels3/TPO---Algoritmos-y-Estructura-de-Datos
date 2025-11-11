@@ -1,5 +1,5 @@
 from os import remove
-from utils import limpiar_pantalla, validar_fecha, validar_hora
+from utils import limpiar_pantalla, validar_fecha, validar_hora, validar_dni
 from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes
 from GMAIL import mensaje_confirmacion
 
@@ -124,6 +124,40 @@ def listar_turnos():
     
     input("\nPresione Enter para continuar...")
     limpiar_pantalla()
+
+
+
+# ---------------------------------------------------------
+# FUNCIÓN: LISTAR POR DNI
+# ---------------------------------------------------------
+
+def listar_por_dni(dni):
+    """
+    Muestra todos los turnos en pantalla que conicidan con el DNI ingresado por parametro.
+    """
+    if not validar_dni(dni):
+        print("✖ DNI inválido. Deben ser 7 u 8 digitos.")
+        input("\nEnter...")
+        limpiar_pantalla()
+        return
+    
+    turnos = cargar_turnos()
+
+    # Filtra los turnos que coincidan con el DNI
+    lista_dni = [t for t in turnos if t["dni"] == dni]
+    
+    if not lista_dni:
+        print(f"No hay turnos registrados para el DNI {dni}.")
+    else:
+        print(f"--- Turnos para el DNI: {dni} ---")
+        # Ordena los turnos por fecha y luego por hora
+        for t in sorted(lista_dni, key=lambda x: (x["fecha"], x["hora"])):
+            print(f"#{t['id']} | {t['fecha']} {t['hora']} | {t['estado']}")
+    
+    input("\nEnter para continuar...")
+    limpiar_pantalla()
+
+
 
 # ---------------------------------------------------------
 # FUNCIÓN: LISTAR POR FECHA

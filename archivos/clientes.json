@@ -30,5 +30,13 @@
     "email": "danieldere4117@gmail.com",
     "telefono": "1144377965",
     "activo": true
+  },
+  "44452150": {
+    "dni": "44452150",
+    "nombre": "Mateo",
+    "apellido": "Suarez",
+    "email": "matema9242002@gmail.com",
+    "telefono": "1158426556",
+    "activo": true
   }
 }
