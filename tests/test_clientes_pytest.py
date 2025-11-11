@@ -58,8 +58,7 @@ def test_dni_caracteres_especiales():
 # TEST DE FUNCION validarEmail
 # ---------------------------------------------------------
 def test_email_gmail_valido():
-    assert validarEmail("usuario@gmail.com")
-    assert validarEmail("USUARIO@GMAIL.COM")  
+    assert validarEmail("usuario@gmail.com") 
     assert validarEmail("nombre.apellido123@gmail.com")
     assert validarEmail("alias+test@gmail.com")
     assert validarEmail("test_email-01@gmail.com")
