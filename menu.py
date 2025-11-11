@@ -84,7 +84,7 @@ def run_loop():
                     dni = input("DNI: ").strip()
                     nombre = input("Nombre: ").strip()
                     apellido = input("Apellido: ").strip()
-                    email = input("Email (opcional): ").strip()
+                    email = input("Email (opcional): ").strip().lower()
                     tel = input("Telefono (opcional): ").strip()
                     alta_cliente(dni, nombre, apellido, email, tel)
 

@@ -6,7 +6,7 @@ Hay 29 Funcion con el Nombre de Test_.
 """
 import pytest
 import json
-from utils import validar_dni, validar_fecha, validar_hora
+from utils import validar_dni, validar_fecha, validar_hora, validarEmail
 from storage import cargar_clientes, guardar_clientes, CLIENTES_JSON
 
 
@@ -54,6 +54,28 @@ def test_dni_caracteres_especiales():
     assert validar_dni("12,345,678") == False
     assert validar_dni("12345678!") == False
 
+# ---------------------------------------------------------
+# TEST DE FUNCION validarEmail
+# ---------------------------------------------------------
+def test_email_gmail_valido():
+    assert validarEmail("usuario@gmail.com")
+    assert validarEmail("USUARIO@GMAIL.COM")  
+    assert validarEmail("nombre.apellido123@gmail.com")
+    assert validarEmail("alias+test@gmail.com")
+    assert validarEmail("test_email-01@gmail.com")
+
+def test_email_gmail_invalido():
+    # dominios incorrectos
+    assert not validarEmail("usuario@hotmail.com")
+    assert not validarEmail("usuario@yahoo.com")
+    assert not validarEmail("usuario@gmail.es")
+
+    # formato incorrecto
+    assert not validarEmail("usuariogmail.com")  
+    assert not validarEmail("usuario@.com")      
+    assert not validarEmail("usuario@ gmail.com")     
+    assert not validarEmail("usuario@gmailcom")       
+    assert not validarEmail("usuario@gmail.")       
 
 # ---------------------------------------------------------
 # TEST DE FUNCION validar_fecha

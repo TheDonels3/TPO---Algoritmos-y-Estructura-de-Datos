@@ -9,6 +9,12 @@ def limpiar_pantalla():
 RE_DNI = re.compile(r"^\d{7,8}$")  # DNI argentino simple (7 u 8 digitos)
 RE_HORA = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$")  # HH:mm entre 00:00 y 23:59
 RE_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")  # Formato YYYY-MM-DD
+RE_EMAIL = re.compile(r'^[a-zA-Z0-9._%+-]+@gmail\.com$')
+
+
+#Validacion de GMAIL
+def validarEmail(email):
+    return bool(RE_EMAIL.match(email))
 
 
 # Devuelve True si el DNI cumple el formato, False si no

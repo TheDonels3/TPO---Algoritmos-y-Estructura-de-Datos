@@ -1,4 +1,4 @@
-from utils import limpiar_pantalla, validar_dni
+from utils import limpiar_pantalla, validar_dni, validarEmail
 from storage import guardar_clientes, cargar_clientes
 
 
@@ -6,7 +6,7 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
     try:
         # Carga los clientes desde el archivo
         clientes = cargar_clientes()
-    
+
         # Verifica que el DNI sea valido
         if not validar_dni(dni):
             print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
@@ -21,12 +21,27 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
             limpiar_pantalla()
             return
         
+        #Verificar que el Gmail cumpla el formato
+        if not validarEmail(email):
+            print("✖ EMAIL invalido. Debe ser una dirección de Gmail válida.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+            return
+
+        #Verificar si el GMAIL ya existe
+        for c in clientes.values():
+            if c.get("email", "").strip().lower() == email:
+                print("✖ Ya existe un cliente con ese email Gmail.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                return
+
         # Crea un nuevo registro de cliente
         clientes[dni] = {
             "dni": dni,
             "nombre": nombre.strip(),
             "apellido": apellido.strip(),
-            "email": (email or "").strip(),
+            "email": email.strip(),
             "telefono": (telefono or "").strip(),
             "activo": True
         }
@@ -151,7 +166,7 @@ def baja_fisica_cliente(dni):
 
         # Verifica si el cliente existe
         if dni in clientes:
-            # En lugar de usar 'del', se recrea el diccionario sin ese cliente
+            # En lugar de usar 'del'.
             del clientes[dni]
             guardar_clientes(clientes)
             print("✔ Cliente eliminado fisicamente.")
