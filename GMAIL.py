@@ -13,7 +13,7 @@ def mensaje_confirmacion(turno):
 
     # Direccion del remitente y clave de aplicacion de Gmail
     from_addr = "gestordeturnos1@gmail.com"
-    password = "osrn vnea okza opro"
+    password = "rzip hnkk bubg dwlg"
 
     # Obtener el cliente segun el DNI del turno
     dni = turno['dni']

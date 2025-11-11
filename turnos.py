@@ -81,6 +81,9 @@ def alta_turno(dni, fecha, hora):
         # Se agrega el turno a la lista global de turnos
         turnos.append(t)
 
+        ''' Envío de correo de confirmación 
+        
+        '''
         try:
             mensaje_confirmacion(t)
         except smtplib.SMTPException as e:
