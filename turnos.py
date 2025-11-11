@@ -1,3 +1,4 @@
+from os import remove
 from utils import limpiar_pantalla, validar_fecha, validar_hora
 from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes
 from GMAIL import mensaje_confirmacion
@@ -191,3 +192,24 @@ def desbloquear_slot(fecha, hora):
             
     # En caso de no encontrar el turno lo informa
     print(f"✖ No se encontró el turno {fecha} {hora}.")
+
+def eliminar_turno_por_id(id_turno):
+    """
+    Elimina un turno por su ID, recibida por parámetro.
+    """
+    turnos = cargar_turnos()
+
+    for t in turnos:
+        if t["id"] == id_turno:
+            print(f"✔ Turno con ID {id_turno} - FECHA: {t['fecha']} - HORA: {t['hora']} - eliminado correctamente.")
+            turnos.remove(t)
+            guardar_turnos(turnos)
+            input("\nPresione Enter para continuar...")
+            limpiar_pantalla()
+            return
+    
+    print(f"✖ Turno con ID {id_turno} no encontrado.")
+    input("\nPresione Enter para continuar...")
+    limpiar_pantalla()
+    
+            

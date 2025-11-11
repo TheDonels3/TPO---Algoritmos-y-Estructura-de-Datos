@@ -62,3 +62,4 @@ def validar_fecha(fecha):
 # Devuelve True si la hora cumple el formato HH:mm, False si no
 def validar_hora(hora):
     return bool(RE_HORA.match(hora))
+

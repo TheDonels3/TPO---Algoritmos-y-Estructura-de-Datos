@@ -31,8 +31,8 @@ def mensaje_confirmacion(turno):
         f"✅ Turno confirmado ✅\n\n"
         f"👤 Nombre: {cliente['nombre']} {cliente['apellido']}\n"
         f"🪪 DNI: {cliente['dni']}\n"
-        f"📅 Fecha: {turno["fecha"]}\n"
-        f"⏰ Hora: {turno["hora"]}\n"
+        f"📅 Fecha: {turno['fecha']}\n"
+        f"⏰ Hora: {turno['hora']}\n"
         "\n"
         "Este es un mensaje automatico. No responder."
     )
