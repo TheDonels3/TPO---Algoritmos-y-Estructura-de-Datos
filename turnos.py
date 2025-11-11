@@ -11,8 +11,10 @@ import smtplib
 
 # Verifica si ya existe un turno ocupado en una fecha y hora determinada
 def _existe_turno_en_slot(turnos, fecha, hora):
-    return any(t for t in turnos if t["fecha"] == fecha and t["hora"] == hora and t["estado"] == "Ocupado")
-
+    for t in turnos:
+        if t.get("fecha") == fecha and t.get("hora") == hora and t.get("estado") == "Ocupado":
+            return True
+    return False
 
 # Verifica si un horario específico está bloqueado para una fecha
 def _slot_bloqueado(fecha, hora):
