@@ -337,6 +337,82 @@ def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None)
 
 
 # ---------------------------------------------------------
+# FUNCIÓN: BLOQUEAR SLOT
+# ---------------------------------------------------------
+
+def bloquear_slot(fecha, hora):
+    """
+    Crea un turno "Ocupado" con DNI "Bloqueado" para evitar
+    que se saquen turnos en ese horario.
+    """
+    try:
+        turnos = cargar_turnos()
+
+        # 1. Validaciones de formato
+        if not validar_fecha(fecha):
+            print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+            input("\nEnter...")
+            limpiar_pantalla()
+            return
+
+        if not validar_hora(hora):
+            print("✖ Hora inválida. Formato esperado HH:mm.")
+            input("\nEnter...")
+            limpiar_pantalla()
+            return
+
+        # 2. Buscar si ya existe un slot en esa fecha/hora
+        slot_existente = None
+        for t in turnos:
+            if t["fecha"] == fecha and t["hora"] == hora:
+                slot_existente = t
+                break
+        
+        if slot_existente:
+            # Caso: El slot ya existe
+            if slot_existente["estado"] == "Ocupado":
+                if slot_existente["dni"] == "Bloqueado":
+                    print(f"ℹ El slot {fecha} {hora} ya se encontraba bloqueado.")
+                else:
+                    print(f"✖ El slot {fecha} {hora} está OCUPADO por un cliente (DNI: {slot_existente['dni']}). No se puede bloquear.")
+            
+            elif slot_existente["estado"] == "Libre":
+                # Si estaba libre (ej. DNI "Sin Asignar"), lo "ocupamos" para bloquearlo
+                slot_existente["dni"] = "Bloqueado"
+                slot_existente["estado"] = "Ocupado"
+                guardar_turnos(turnos)
+                print(f"✔ Slot {fecha} {hora} (que estaba libre) ha sido bloqueado.")
+        
+        else:
+            # Caso: El slot no existe en el JSON, se crea como nuevo bloqueo
+            next_id = _obtener_next_turno_id(turnos)
+            t = {
+                "id": next_id,
+                "dni": "Bloqueado", # DNI especial para identificarlo
+                "fecha": fecha,
+                "hora": hora,
+                "estado": "Ocupado" # Ocupado para que _existe_turno_en_slot lo detecte
+            }
+            turnos.append(t)
+            guardar_turnos(turnos)
+            print(f"✔ Slot {fecha} {hora} ha sido creado y bloqueado exitosamente.")
+
+    except KeyboardInterrupt:
+        print("\n✖ Operación cancelada por el usuario.")
+    except Exception as e:
+        print(f"✖ Error inesperado al bloquear el slot: {e}")
+    finally:
+        input("\nEnter para continuar...")
+        limpiar_pantalla()
+
+
+
+
+
+
+
+
+# ---------------------------------------------------------
 # FUNCIÓN: DESBLOQUEAR_SLOT
 # ---------------------------------------------------------
 

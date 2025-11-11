@@ -1,6 +1,6 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno
+from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
 def mostrar_bienvenida():
@@ -178,6 +178,7 @@ def run_loop():
                 elif opc == "7":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
+                    bloquear_slot(fecha, hora)
 
                 # Desbloquear un horario especifico
                 elif opc == "8":

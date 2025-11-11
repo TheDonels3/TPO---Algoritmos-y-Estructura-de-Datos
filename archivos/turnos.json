@@ -19,5 +19,12 @@
     "fecha": "2025-11-16",
     "hora": "17:00",
     "estado": "Ocupado"
+  },
+  {
+    "id": 4,
+    "dni": "Bloqueado",
+    "fecha": "2025-11-20",
+    "hora": "15:00",
+    "estado": "Ocupado"
   }
 ]
