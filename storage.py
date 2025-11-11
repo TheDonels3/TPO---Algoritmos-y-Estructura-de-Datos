@@ -85,6 +85,6 @@ def guardar_turnos(turnos_list):
 slots_bloqueados = []
 
 # Conjuntos por fecha para 'bloqueos' (slots no disponibles)
-# {"2025-10-08": {"10:30", "14:00"}}
+# {"2025-10-08": {"10:30", "14:00"}} -> Estructura del Diccionario
 bloqueos_por_fecha = {}
 

@@ -1,5 +1,6 @@
 from utils import limpiar_pantalla, validar_fecha, validar_hora
 from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes
+from GMAIL import mensaje_confirmacion
 
 
 # ---------------------------------------------------------
@@ -83,6 +84,8 @@ def alta_turno(dni, fecha, hora):
         "hora": hora,            # Hora del turno
         "estado": "Ocupado"      # Estado inicial del turno
     }
+
+    mensaje_confirmacion(t)
 
     # Se agrega el turno a la lista global de turnos
     turnos.append(t)
