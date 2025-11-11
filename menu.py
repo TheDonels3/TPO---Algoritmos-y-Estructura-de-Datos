@@ -1,6 +1,6 @@
 from utils import limpiar_pantalla
 from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni
+from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
 def mostrar_bienvenida():
@@ -148,18 +148,22 @@ def run_loop():
                 # Modificar un turno existente
                 elif opc == "5":
                     try:
-                        tid = int(input("ID de turno: ").strip())
+                        tid = int(input("ID de turno a modificar: ").strip())
                     except ValueError:
-                        print("ID invalido.")
+                        print("✖ ID invalido. Debe ser un numero.")
                         input("Enter...")
                         limpiar_pantalla()
                         continue
 
+                    print(f"\nModificando Turno ID: {tid}. Deje vacío para no cambiar.")
                     nuevo_dni = input("Nuevo DNI (vacio=no cambia): ").strip() or None
                     nueva_fecha = input("Nueva fecha (YYYY-MM-DD, vacio=no): ").strip() or None
                     nueva_hora = input("Nueva hora (HH:mm, vacio=no): ").strip() or None
 
-                 # Eliminar un turno existente
+                    # Llamada a la funcion de modificacion
+                    modificar_turno(tid, nuevo_dni, nueva_fecha, nueva_hora)
+
+                # Eliminar un turno existente
                 elif opc == "6":
                     try:
                         tid = int(input("ID de turno a eliminar: ").strip())

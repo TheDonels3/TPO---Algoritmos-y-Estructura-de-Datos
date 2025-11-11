@@ -211,6 +211,131 @@ def listar_por_fecha(fecha):
         limpiar_pantalla()
 
 
+
+# ---------------------------------------------------------
+# FUNCIÓN: MODIFICAR TURNO
+# ---------------------------------------------------------
+
+def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None):
+    """
+    Modifica el DNI, la fecha y/o la hora de un turno existente,
+    realizando todas las validaciones necesarias.
+    """
+    try:
+        turnos = cargar_turnos()
+        clientes = cargar_clientes()
+
+        # 1. Buscar el turno por ID
+        turno_a_modificar = None
+        for t in turnos:
+            if t.get("id") == id_turno:
+                turno_a_modificar = t
+                break
+        
+        if not turno_a_modificar:
+            print(f"✖ No se encontró un turno con ID {id_turno}.")
+            return
+
+        # 2. Verificar si se pidio algun cambio
+        if not nuevo_dni and not nueva_fecha and not nueva_hora:
+            print("✖ No se especificaron cambios.")
+            return
+
+        # 3. Determinar el estado "final" del turno para validaciones
+        # Usamos el valor nuevo si se proveyó, o el valor actual si no.
+        fecha_final = nueva_fecha or turno_a_modificar['fecha']
+        hora_final = nueva_hora or turno_a_modificar['hora']
+
+        cambios_realizados = []
+
+        # 4. Validar DNI (si se cambió)
+        if nuevo_dni:
+            if not validar_dni(nuevo_dni):
+                print(f"✖ DNI {nuevo_dni} no tiene un formato válido.")
+                return
+            if not _cliente_activo(clientes, nuevo_dni):
+                print(f"✖ Cliente con DNI {nuevo_dni} no existe o está inactivo.")
+                return
+
+        # 5. Validar Slot (Fecha/Hora) (si se cambió alguno de los dos)
+        # Solo validamos el slot si la fecha o la hora son distintas al original
+        if nueva_fecha or nueva_hora:
+            
+            # Validar formatos
+            if nueva_fecha and not validar_fecha(nueva_fecha):
+                print(f"✖ Fecha {nueva_fecha} inválida. Formato YYYY-MM-DD.")
+                return
+            if nueva_hora and not validar_hora(nueva_hora):
+                print(f"✖ Hora {nueva_hora} inválida. Formato HH:mm.")
+                return
+
+            # Validar disponibilidad del slot (usando los valores finales)
+            if _slot_bloqueado(fecha_final, hora_final):
+                print(f"✖ El horario {fecha_final} {hora_final} está BLOQUEADO.")
+                return
+            
+            # Validamos que no exista OTRO turno (excluyendo el actual)
+            for t in turnos:
+                if t["id"] != id_turno and \
+                   t["fecha"] == fecha_final and \
+                   t["hora"] == hora_final and \
+                   t["estado"] == "Ocupado":
+                    print(f"✖ El horario {fecha_final} {hora_final} ya está OCUPADO por otro turno.")
+                    return
+
+        # 6. Aplicar los cambios (si todas las validaciones pasaron)
+        if nuevo_dni:
+            turno_a_modificar['dni'] = nuevo_dni
+            cambios_realizados.append(f"DNI a {nuevo_dni}")
+        
+        if nueva_fecha:
+            turno_a_modificar['fecha'] = nueva_fecha
+            cambios_realizados.append(f"Fecha a {nueva_fecha}")
+
+        if nueva_hora:
+            turno_a_modificar['hora'] = nueva_hora
+            cambios_realizados.append(f"Hora a {nueva_hora}")
+        
+
+        # Si el turno ahora tiene un DNI "real" (no "Sin Asignar")
+        # y su estado anterior era "Libre", lo actualizamos a "Ocupado".
+        if turno_a_modificar['dni'] != "Sin Asignar" and turno_a_modificar['estado'] == "Libre":
+            turno_a_modificar['estado'] = "Ocupado"
+            if "Estado del Turno: Ocupado" not in cambios_realizados:
+                 cambios_realizados.append("Estado del Turno: Ocupado")
+
+
+
+        # 7. Guardar y notificar
+        guardar_turnos(turnos)
+        print(f"✔ Turno ID {id_turno} actualizado: {', '.join(cambios_realizados)}.")
+
+        # 8. Enviar email de re-confirmación
+        try:
+            print("Enviando email de re-confirmación...")
+            mensaje_confirmacion(turno_a_modificar)
+        except smtplib.SMTPException as e:
+            print(f"⚠ Error al enviar la re-confirmación (SMTP): {e}")
+        except KeyError as e_mail:
+            print(f"⚠ Error: El nuevo cliente no tiene un email válido registrado: {e_mail}")
+        except Exception as e_mailenviado:
+            print(f"⚠ Error inesperado al enviar la re-confirmación: {e_mailenviado}")
+        
+
+    except KeyError as e:
+        print(f"✖ Error: Faltan datos en el registro del turno/cliente: {e}")
+    except KeyboardInterrupt:
+        print("\n✖ Operación cancelada por el usuario.")
+    except Exception as e:
+        print(f"✖ Error inesperado al modificar el turno: {e}")
+    finally:
+        input("\nEnter para continuar...")
+        limpiar_pantalla()
+
+
+
+
+
 # ---------------------------------------------------------
 # FUNCIÓN: DESBLOQUEAR_SLOT
 # ---------------------------------------------------------
