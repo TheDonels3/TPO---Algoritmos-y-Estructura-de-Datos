@@ -144,43 +144,23 @@ def listar_turnos():
 def listar_por_dni(dni):
     """
     Muestra todos los turnos en pantalla que conicidan con el DNI ingresado por parametro.
-    Permite buscar por DNI numérico, "Sin Asignar" o "Bloqueado".
     """
     try:   
-        dni_input = dni.strip() # Limpiamos la entrada
-        
-        # Clave de búsqueda (puede ser un DNI "123" o un string "Sin Asignar")
-        dni_search_key = dni_input 
-
-        # 1. Validar la entrada
-        es_valido_numerico = validar_dni(dni_input)
-        
-        # 2. Manejar DNIs especiales (case-insensitive)
-        if dni_input.lower() == "sin asignar":
-            es_valido_especial = True
-            dni_search_key = "Sin Asignar" # Usamos el valor exacto del JSON
-        elif dni_input.lower() == "bloqueado":
-            es_valido_especial = True
-            dni_search_key = "Bloqueado" # Usamos el valor exacto que definimos
-        else:
-            es_valido_especial = False
-
-        # 3. Si no es ni numérico válido NI especial válido, rechazamos.
-        if not es_valido_numerico and not es_valido_especial:
-            print("✖ DNI inválido. Deben ser 7/8 digitos, 'Sin Asignar' o 'Bloqueado'.")
+        if not validar_dni(dni):
+            print("✖ DNI inválido. Deben ser 7 u 8 digitos.")
             input("\nEnter...")
             limpiar_pantalla()
             return
         
         turnos = cargar_turnos()
 
-        # 4. Filtra los turnos que coincidan con la clave de búsqueda (dni_search_key)
-        lista_dni = [t for t in turnos if t["dni"] == dni_search_key]
+        # Filtra los turnos que coincidan con el DNI
+        lista_dni = [t for t in turnos if t["dni"] == dni]
         
         if not lista_dni:
-            print(f"No hay turnos registrados para: {dni_search_key}.")
+            print(f"No hay turnos registrados para el DNI {dni}.")
         else:
-            print(f"--- Turnos para: {dni_search_key} ---")
+            print(f"--- Turnos para el DNI: {dni} ---")
             # Ordena los turnos por fecha y luego por hora
             for t in sorted(lista_dni, key=lambda x: (x["fecha"], x["hora"])):
                 print(f"#{t['id']} | {t['fecha']} {t['hora']} | {t['estado']}")
@@ -247,10 +227,15 @@ def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None)
 
         # 1. Buscar el turno por ID
         turno_a_modificar = None
-        for t in turnos:
+        encontrado = False
+        i = 0
+        
+        while i < len(turnos) and not encontrado:
+            t = turnos[i]
             if t.get("id") == id_turno:
                 turno_a_modificar = t
-                break
+                encontrado = True  # Bandera detiene el bucle
+            i += 1
         
         if not turno_a_modificar:
             print(f"✖ No se encontró un turno con ID {id_turno}.")
@@ -383,10 +368,15 @@ def bloquear_slot(fecha, hora):
 
         # 2. Buscar si ya existe un slot en esa fecha/hora
         slot_existente = None
-        for t in turnos:
+        encontrado = False
+        i = 0
+
+        while i < len(turnos) and not encontrado:
+            t = turnos[i]
             if t["fecha"] == fecha and t["hora"] == hora:
                 slot_existente = t
-                break
+                encontrado = True  # Bandera detiene el bucle
+            i += 1
         
         if slot_existente:
             # Caso: El slot ya existe

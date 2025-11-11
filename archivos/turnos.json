@@ -15,8 +15,15 @@
   },
   {
     "id": 4,
-    "dni": "Bloqueado",
-    "fecha": "2025-11-20",
+    "dni": "44452150",
+    "fecha": "2025-11-28",
+    "hora": "18:00",
+    "estado": "Ocupado"
+  },
+  {
+    "id": 5,
+    "dni": "44452150",
+    "fecha": "2025-11-05",
     "hora": "15:00",
     "estado": "Ocupado"
   }
