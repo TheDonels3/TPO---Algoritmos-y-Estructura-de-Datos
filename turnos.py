@@ -144,23 +144,43 @@ def listar_turnos():
 def listar_por_dni(dni):
     """
     Muestra todos los turnos en pantalla que conicidan con el DNI ingresado por parametro.
+    Permite buscar por DNI numérico, "Sin Asignar" o "Bloqueado".
     """
     try:   
-        if not validar_dni(dni):
-            print("✖ DNI inválido. Deben ser 7 u 8 digitos.")
+        dni_input = dni.strip() # Limpiamos la entrada
+        
+        # Clave de búsqueda (puede ser un DNI "123" o un string "Sin Asignar")
+        dni_search_key = dni_input 
+
+        # 1. Validar la entrada
+        es_valido_numerico = validar_dni(dni_input)
+        
+        # 2. Manejar DNIs especiales (case-insensitive)
+        if dni_input.lower() == "sin asignar":
+            es_valido_especial = True
+            dni_search_key = "Sin Asignar" # Usamos el valor exacto del JSON
+        elif dni_input.lower() == "bloqueado":
+            es_valido_especial = True
+            dni_search_key = "Bloqueado" # Usamos el valor exacto que definimos
+        else:
+            es_valido_especial = False
+
+        # 3. Si no es ni numérico válido NI especial válido, rechazamos.
+        if not es_valido_numerico and not es_valido_especial:
+            print("✖ DNI inválido. Deben ser 7/8 digitos, 'Sin Asignar' o 'Bloqueado'.")
             input("\nEnter...")
             limpiar_pantalla()
             return
         
         turnos = cargar_turnos()
 
-        # Filtra los turnos que coincidan con el DNI
-        lista_dni = [t for t in turnos if t["dni"] == dni]
+        # 4. Filtra los turnos que coincidan con la clave de búsqueda (dni_search_key)
+        lista_dni = [t for t in turnos if t["dni"] == dni_search_key]
         
         if not lista_dni:
-            print(f"No hay turnos registrados para el DNI {dni}.")
+            print(f"No hay turnos registrados para: {dni_search_key}.")
         else:
-            print(f"--- Turnos para el DNI: {dni} ---")
+            print(f"--- Turnos para: {dni_search_key} ---")
             # Ordena los turnos por fecha y luego por hora
             for t in sorted(lista_dni, key=lambda x: (x["fecha"], x["hora"])):
                 print(f"#{t['id']} | {t['fecha']} {t['hora']} | {t['estado']}")
