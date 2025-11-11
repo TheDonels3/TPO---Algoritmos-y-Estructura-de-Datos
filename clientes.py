@@ -30,7 +30,7 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
 
         #Verificar si el GMAIL ya existe
         for c in clientes.values():
-            if c.get("email", "").strip().lower() == email:
+            if c.get("email", "") == email:
                 print("✖ Ya existe un cliente con ese email Gmail.")
                 input("\nEnter para continuar...")
                 limpiar_pantalla()
