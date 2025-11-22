@@ -1,12 +1,68 @@
 from utils import limpiar_pantalla, validar_dni, validarEmail
 from storage import guardar_clientes, cargar_clientes
 
+def val_alta_cliente():
+    try:
+        """
+        Bucle para validar datos ingresados y crear el cliente
+        """
+        # Carga los clientes desde el archivo
+        clientes = cargar_clientes()
+
+        dni = input("DNI: ").strip()
+        
+        # Verifica que el DNI sea valido
+        if not validar_dni(dni):
+            print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+            return
+        # Verifica si el DNI ya existe
+        if dni in clientes:
+            print("✖ Ya existe un cliente con ese DNI.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+            return
+        
+        nombre = input("Nombre: ").strip()
+        apellido = input("Apellido: ").strip()
+        
+        email = input("Email (opcional): ").strip().lower()
+        if email != "":
+            if not validarEmail(email):
+                print("✖ EMAIL invalido. Debe ser una dirección de Gmail válida.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                return
+            #Verificar si el GMAIL ya existe
+            for c in clientes.values():
+                # los mail son opcionales, no todos tienen, por eso el ""
+                if c.get("email", "") == email:
+                    print("✖ Ya existe un cliente con ese email Gmail.")
+                    input("\nEnter para continuar...")
+                    limpiar_pantalla()
+                    return
+        
+        tel = input("Telefono (opcional): ").strip()
+        
+        alta_cliente(dni,nombre,apellido, email, tel)
+
+    except (AttributeError, ValueError):
+        print("✖ Error: Valores invalidos proporcionados.")
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+    finally:
+        input("\nEnter para continuar...")
+        limpiar_pantalla()
+
 
 def alta_cliente(dni, nombre, apellido, email, telefono):
     try:
         # Carga los clientes desde el archivo
         clientes = cargar_clientes()
-
+        """
+        
+        
         # Verifica que el DNI sea valido
         if not validar_dni(dni):
             print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
@@ -35,13 +91,13 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
                 input("\nEnter para continuar...")
                 limpiar_pantalla()
                 return
-
+        """
         # Crea un nuevo registro de cliente
         clientes[dni] = {
             "dni": dni,
             "nombre": nombre.strip(),
             "apellido": apellido.strip(),
-            "email": email.strip(),
+            "email": (email.strip() or ""),
             "telefono": (telefono or "").strip(),
             "activo": True
         }

@@ -1,5 +1,5 @@
 from utils import limpiar_pantalla
-from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
+from clientes import val_alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
@@ -80,12 +80,7 @@ def run_loop():
                 
                 # Alta de cliente nuevo
                 if opc == "1":
-                    dni = input("DNI: ").strip()
-                    nombre = input("Nombre: ").strip()
-                    apellido = input("Apellido: ").strip()
-                    email = input("Email (opcional): ").strip().lower()
-                    tel = input("Telefono (opcional): ").strip()
-                    alta_cliente(dni, nombre, apellido, email, tel)
+                    val_alta_cliente()
 
                 # Listado de todos los clientes
                 elif opc == "2":
