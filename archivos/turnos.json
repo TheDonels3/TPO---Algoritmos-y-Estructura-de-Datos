@@ -29,9 +29,16 @@
   },
   {
     "id": 6,
-    "dni": "44452150",
+    "dni": "Sin Asignar",
     "fecha": "2025-11-12",
     "hora": "15:00",
+    "estado": "Libre"
+  },
+  {
+    "id": 7,
+    "dni": "Bloqueado",
+    "fecha": "2025-12-24",
+    "hora": "12:00",
     "estado": "Ocupado"
   }
 ]
