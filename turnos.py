@@ -500,9 +500,11 @@ def eliminar_turno_por_id(id_turno):
                 turnos.remove(t)
                 guardar_turnos(turnos)
                 return
-            else:
-                print(f"✖ Turno con ID {id_turno} no encontrado.")
-
+            ##else:
+            ##    print(f"✖ Turno con ID {id_turno} no encontrado.")
+        if id_turno not in turnos:
+            print(f"✖ Turno con ID {id_turno} no encontrado.")
+            return
     except KeyError as e:
         print(f"✖ Error: Campo faltante en datos del turno: {e}")
     except KeyboardInterrupt:
