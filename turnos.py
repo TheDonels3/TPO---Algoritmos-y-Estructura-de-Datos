@@ -232,16 +232,10 @@ def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None)
 
         # 1. Buscar el turno por ID
         turno_a_modificar = None
-        encontrado = False
-        i = 0
-        
-        while i < len(turnos) and not encontrado:
-            t = turnos[i]
-            if t.get("id") == id_turno:
-                turno_a_modificar = t
-                encontrado = True  # Bandera detiene el bucle
-            i += 1
-        
+
+        for turno in turnos:
+            if turno["id"] == id_turno:
+                turno_a_modificar = turno
         if not turno_a_modificar:
             print(f"✖ No se encontró un turno con ID {id_turno}.")
             return
@@ -371,18 +365,12 @@ def bloquear_slot(fecha, hora):
             limpiar_pantalla()
             return
 
-        # 2. Buscar si ya existe un slot en esa fecha/hora
+        # 2. Buscar si ya existe un slot en esa fecha/hora        
         slot_existente = None
-        encontrado = False
-        i = 0
+        for i in turnos:
+            if i["fecha"] == fecha and i["hora"] == hora:
+                slot_existente = i
 
-        while i < len(turnos) and not encontrado:
-            t = turnos[i]
-            if t["fecha"] == fecha and t["hora"] == hora:
-                slot_existente = t
-                encontrado = True  # Bandera detiene el bucle
-            i += 1
-        
         if slot_existente:
             # Caso: El slot ya existe
             if slot_existente["estado"] == "Ocupado":
@@ -500,8 +488,7 @@ def eliminar_turno_por_id(id_turno):
                 turnos.remove(t)
                 guardar_turnos(turnos)
                 return
-            ##else:
-            ##    print(f"✖ Turno con ID {id_turno} no encontrado.")
+
         if id_turno not in turnos:
             print(f"✖ Turno con ID {id_turno} no encontrado.")
             return
