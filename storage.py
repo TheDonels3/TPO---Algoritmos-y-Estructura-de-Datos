@@ -11,13 +11,9 @@ def cargar_clientes():
     if os.path.exists(CLIENTES_JSON):
         try:
             with open(CLIENTES_JSON, 'r', encoding='utf-8') as f:
-                contenido = f.read().strip()
-
-                if not contenido:
-                    return {}
-                return json.loads(contenido)
+                return json.load(f) or {}
             
-        except (json.JSONDecodeError, IOError) as e:
+        except (json.JSONDecodeError) as e:
             print(f"⚠ Error al cargar clientes: {e}. Iniciando con diccionario vacío.")
             return {}
         except IOError as e:
@@ -37,11 +33,7 @@ def guardar_clientes(clientes_dict):
         print(f"✖ Error al guardar clientes: {e}")
         return False
     
-# Diccionario de clientes: {dni: {datos del cliente}}
-# clientes = {}
-
-# Lista de turnos
-turnos = []
+# ========== FUNCIONES PARA TURNOS ==========
 
 def _obtener_next_turno_id(turnos):
     """Calcula el siguiente ID de turno basándose en el ID máximo existente."""
@@ -56,10 +48,7 @@ def cargar_turnos():
     if os.path.exists(TURNS_JSON):
         try:
             with open(TURNS_JSON, 'r', encoding='utf-8') as f:
-                contenido = f.read().strip()
-                if not contenido:
-                    return []
-                return json.loads(contenido)
+                return json.load(f) or []
             
         except (json.JSONDecodeError) as e:
             print(f"⚠ Error al cargar turnos: {e}. Iniciando con lista vacía.")
@@ -67,6 +56,7 @@ def cargar_turnos():
         except (IOError) as e:
             print(f"⚠ Error al cargar turnos: {e}. Iniciando con lista vacía.")
             return []
+        
     return [] # lista vacia si no hay archivo 
 
 def guardar_turnos(turnos_list):
