@@ -1,6 +1,7 @@
-from utils import limpiar_pantalla
-from clientes import val_alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
+from utils import limpiar_pantalla, validar_dni, validar_fecha, validarEmail, validarTextoAlfabetico, validarTelefono, validar_hora
+from clientes import alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
+from storage import log, ver_log
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
 def mostrar_bienvenida():
@@ -64,15 +65,18 @@ def menu_turnos():
 def run_loop():
 
     mostrar_bienvenida()
+    op = ""
 
-    while True:
+    while op != "0":
 
-        esValido = True  # Control de submenus
+        esValido = True  # -> Control de submenus
         menu_ppal()
         op = input("Opcion: ").strip()
 
         # ---------------- CLIENTES ----------------
         if op == "1":
+
+            limpiar_pantalla()
 
             while esValido:
                 menu_clientes()
@@ -80,29 +84,84 @@ def run_loop():
                 
                 # Alta de cliente nuevo
                 if opc == "1":
-                    val_alta_cliente()
+                    
+                    cargaCliente = True
+                    while cargaCliente:
+
+                            dni = input("Ingrese su DNI: ").lower().strip()  
+                            while not validar_dni(dni, False):
+                                input("\nPresione Enter para continuar...")
+                                limpiar_pantalla()
+                                dni = input("Ingrese su DNI: ").lower().strip()
+
+                            nombre = input("Ingrese su Nombre: ").lower().strip()
+                            while not validarTextoAlfabetico(nombre):
+                                input("\nPresione Enter para continuar...")
+                                limpiar_pantalla()
+                                nombre = input("Ingrese su Nombre: ").lower().strip()
+
+                            apellido = input("Ingrese su Apellido: ").lower().strip()
+                            while not validarTextoAlfabetico(apellido):
+                                input("\nPresione Enter para continuar...")
+                                limpiar_pantalla()
+                                apellido = input("Ingrese su Apellido: ").lower().strip()
+                            
+                            email = input("Ingrese su Email: ").lower().strip()
+                            while not validarEmail(email, True):
+                                input("\nPresione Enter para continuar...")
+                                limpiar_pantalla()
+                                email = input("Ingrese su Email: ").lower().strip()
+
+                            telefono = input("Ingrese su Telefono {Opcional}: ").strip()
+                            while not validarTelefono(telefono):
+                                print("Telefono Invalido.")
+                                input("\nPresione Enter para continuar...")
+                                limpiar_pantalla()
+                                telefono = input("Ingrese su Telefono {Opcional}: ").strip()
+
+                            cargaCliente = False     
+                            alta_cliente(dni, nombre, apellido, email, telefono)
 
                 # Listado de todos los clientes
                 elif opc == "2":
-                    listar_clientes(solo_activos=False)
+                    listar_clientes(False)
 
                 # Listado solo de clientes activos
                 elif opc == "3":
-                    listar_clientes(solo_activos=True)
+                    listar_clientes(True)
 
                 # Modificar datos de cliente existente
                 elif opc == "4":
-                    dni = input("DNI a modificar: ").strip()
+                    dni = input("Ingrese DNI a modificar: ").strip()
+
+                    while not validar_dni(dni, True):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        dni = input("Ingrese DNI a modificar: ").strip()
+
                     modificar_cliente(dni)
+                
 
                 # Baja logica (desactiva cliente sin borrarlo)
                 elif opc == "5":
                     dni = input("DNI para baja logica: ").strip()
+
+                    while not validar_dni(dni, True):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        dni = input("DNI para baja logica: ").strip()
+
                     baja_logica_cliente(dni)
 
                 # Baja fisica (elimina cliente completamente)
                 elif opc == "6":
                     dni = input("DNI para baja fisica: ").strip()
+
+                    while not validar_dni(dni, True):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        dni = input("DNI para baja fisica: ").strip()
+
                     baja_fisica_cliente(dni)
 
                 # Volver al menu principal
@@ -115,15 +174,34 @@ def run_loop():
 
         # ---------------- TURNOS ----------------
         elif op == "2":
+
+            limpiar_pantalla()
+
             while esValido:
                 menu_turnos()
                 opc = input("Opcion turnos: ").strip()
 
                 # Crear nuevo turno
-                if opc == "1":
+                if opc == "1":  
                     dni = input("DNI cliente: ").strip()
+
+                    while not validar_dni(dni, True):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        dni = input("DNI cliente: ").strip()
+
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
+                    while not validar_fecha(fecha):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        fecha = input("Fecha (YYYY-MM-DD): ").strip()
+
                     hora = input("Hora (HH:mm): ").strip()
+                    while not validar_hora(hora):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        hora = input("Hora (HH:mm): ").strip()
+
                     alta_turno(dni, fecha, hora)
 
                 # Listar todos los turnos
@@ -133,11 +211,23 @@ def run_loop():
                 # Listar turnos por DNI
                 elif opc == "3":
                     dni = input("DNI: ").strip()
+
+                    while not validar_dni(dni, True):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        dni = input("DNI: ").strip()
+
                     listar_por_dni(dni)
 
                 # Listar turnos por fecha
                 elif opc == "4":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
+                    
+                    while not validar_fecha(fecha):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        fecha = input("Fecha (YYYY-MM-DD): ").strip()
+
                     listar_por_fecha(fecha)
 
                 # Modificar un turno existente
@@ -145,17 +235,51 @@ def run_loop():
                     try:
                         tid = int(input("ID de turno a modificar: ").strip())
                     except ValueError:
-                        print("✖ ID invalido. Debe ser un numero.")
+                        print("✖ ID invalido. Debe ser un número.")
+                        log("ERRO", "ValueError", "Dato inválido en ID de Turno")
                         input("Enter...")
                         limpiar_pantalla()
                         continue
 
-                    print(f"\nModificando Turno ID: {tid}. Deje vacío para no cambiar.")
-                    nuevo_dni = input("Nuevo DNI (vacio=no cambia): ").strip() or None
-                    nueva_fecha = input("Nueva fecha (YYYY-MM-DD, vacio=no): ").strip() or None
-                    nueva_hora = input("Nueva hora (HH:mm, vacio=no): ").strip() or None
+                    print(f"\nModificando Turno ID: {tid} (Deje VACÍO para no cambiar)")
 
-                    # Llamada a la funcion de modificacion
+                    # ----------------- DNI -----------------
+                    nuevo_dni = input("Nuevo DNI (vacío=no cambia): ").strip()
+                    if nuevo_dni == "":
+                        nuevo_dni = None
+                    else:
+                        while not validar_dni(nuevo_dni, True):
+                            input("\nPresione Enter para continuar...")
+                            limpiar_pantalla()
+                            nuevo_dni = input("Nuevo DNI (vacío=no cambia): ").strip()
+                            if nuevo_dni == "":
+                                nuevo_dni = None
+                
+                    # ----------------- FECHA -----------------
+                    nueva_fecha = input("Nueva fecha (YYYY-MM-DD, vacío=no): ").strip()
+                    if nueva_fecha == "":
+                        nueva_fecha = None
+                    else:
+                        while not validar_fecha(nueva_fecha):
+                            input("\nPresione Enter para continuar...")
+                            limpiar_pantalla()
+                            nueva_fecha = input("Nueva fecha (YYYY-MM-DD, vacío=no): ").strip()
+                            if nueva_fecha == "":
+                                nueva_fecha = None
+                  
+                    # ----------------- HORA -----------------
+                    nueva_hora = input("Nueva hora (HH:mm, vacío=no): ").strip()
+                    if nueva_hora == "":
+                        nueva_hora = None
+                    else:
+                        while not validar_hora(nueva_hora):
+                            input("\nPresione Enter para continuar...")
+                            limpiar_pantalla()
+                            nueva_hora = input("Nueva hora (HH:mm, vacío=no): ").strip()
+                            if nueva_hora == "":
+                                nueva_hora = None
+
+                    # Llamada final
                     modificar_turno(tid, nuevo_dni, nueva_fecha, nueva_hora)
 
                 # Eliminar un turno existente
@@ -164,6 +288,7 @@ def run_loop():
                         tid = int(input("ID de turno a eliminar: ").strip())
                     except ValueError:
                         print("ID invalido.")
+                        log("ERRO", "ValueError", "Dato Invalido en ID de Turno")
                         input("\nPresione Enter para continuar...")
                         limpiar_pantalla()
                         continue
@@ -172,13 +297,37 @@ def run_loop():
                 # Bloquear un horario especifico
                 elif opc == "7":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
+                    
+                    while not validar_fecha(fecha):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        fecha = input("Fecha (YYYY-MM-DD): ").strip()
+
                     hora = input("Hora (HH:mm): ").strip()
+
+                    while not validar_hora(hora):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        hora = input("Hora (HH:mm): ").strip()
+
                     bloquear_slot(fecha, hora)
 
                 # Desbloquear un horario especifico
                 elif opc == "8":
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
+                    
+                    while not validar_fecha(fecha):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        fecha = input("Fecha (YYYY-MM-DD): ").strip()
+
                     hora = input("Hora (HH:mm): ").strip()
+
+                    while not validar_hora(hora):
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        hora = input("Hora (HH:mm): ").strip()
+
                     desbloquear_slot(fecha, hora)
                 
                  # Volver al menu principal
@@ -192,14 +341,18 @@ def run_loop():
         # ---------------- LOG ----------------
         # Mostrar registro de logs o notificaciones (a implementar)
         elif op == "3":
-            ##ver_log()
+            limpiar_pantalla()
+
+            ver_log()
             input("\nEnter para continuar...")
             limpiar_pantalla()
 
         # ---------------- SALIR ----------------
         elif op == "0":
+            limpiar_pantalla()
             print("\nChau!")
-            break
         
         else:
             print("Opcion invalida.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
