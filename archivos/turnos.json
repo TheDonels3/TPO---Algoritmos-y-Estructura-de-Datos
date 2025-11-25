@@ -82,5 +82,12 @@
     "fecha": "2025-11-29",
     "hora": "09:00",
     "estado": "Ocupado"
+  },
+  {
+    "id": 14,
+    "dni": "44452151",
+    "fecha": "2025-11-25",
+    "hora": "19:00",
+    "estado": "Ocupado"
   }
 ]

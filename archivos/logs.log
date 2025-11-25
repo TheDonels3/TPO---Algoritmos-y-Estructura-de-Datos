@@ -10,3 +10,4 @@
 2025-11-25 15:53:47 | INFO | alta_turno | Correo de confirmación enviado a walter@gmail.com para turno ID 13
 2025-11-25 17:30:56 | INFO | bloquear_slot | Slot 2025-12-03 12:00 ha sido creado y bloqueado exitosamente.
 2025-11-25 17:32:03 | INFO | desbloquear_slot | Turno 2025-12-03 12:00 desbloqueado.
+2025-11-25 18:23:42 | INFO | alta_cliente | Cliente DNI 44452151 registrado correctamente

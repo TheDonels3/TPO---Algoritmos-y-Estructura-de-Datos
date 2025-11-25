@@ -85,7 +85,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│         === ALTA DE NUEVO CLIENTE ===        │\n"
+                        "│         === ALTA DE NUEVO CLIENTE ===            │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     validar_alta_cliente()
@@ -96,7 +96,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│       === LISTADO DE TODOS LOS CLIENTES ===  │\n"
+                        "│       === LISTADO DE TODOS LOS CLIENTES ===      │\n"
                         "└──────────────────────────────────────────────────┘\n"
                     )
                     listar_clientes(solo_activos=False)
@@ -107,7 +107,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│     === LISTADO DE CLIENTES ACTIVOS ===     │\n"
+                        "│      === LISTADO DE CLIENTES ACTIVOS ===         │\n"
                         "└──────────────────────────────────────────────────┘\n"
                     )
                     listar_clientes(solo_activos=True)
@@ -118,7 +118,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│         === MODIFICAR CLIENTE ===            │\n"
+                        "│            === MODIFICAR CLIENTE ===             │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     validar_modificacion_cliente()
@@ -129,7 +129,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│        === BAJA LÓGICA DE CLIENTE ===       │\n"
+                        "│          === BAJA LÓGICA DE CLIENTE ===          │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     dni = input("DNI para baja logica: ").strip()
@@ -141,7 +141,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│        === BAJA FÍSICA DE CLIENTE ===       │\n"
+                        "│        === BAJA FÍSICA DE CLIENTE ===            │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     dni = input("DNI para baja fisica: ").strip()
@@ -167,7 +167,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│           === CREAR NUEVO TURNO ===           │\n"
+                        "│           === CREAR NUEVO TURNO ===               │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     validar_alta_turno()
@@ -178,7 +178,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│        === LISTADO GENERAL DE TURNOS ===    │\n"
+                        "│        === LISTADO GENERAL DE TURNOS ===         │\n"
                         "└──────────────────────────────────────────────────┘\n"
                     )
                     listar_turnos()
@@ -189,7 +189,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│          === TURNOS POR CLIENTE ===          │\n"
+                        "│          === TURNOS POR CLIENTE ===              │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     dni = input("DNI: ").strip()
@@ -201,7 +201,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│           === TURNOS POR FECHA ===           │\n"
+                        "│           === TURNOS POR FECHA ===               │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
@@ -213,7 +213,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│            === MODIFICAR TURNO ===            │\n"
+                        "│            === MODIFICAR TURNO ===               │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     validar_modificacion_turno()
@@ -224,7 +224,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│            === ELIMINAR TURNO ===             │\n"
+                        "│            === ELIMINAR TURNO ===                │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     try:
@@ -242,7 +242,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│          === BLOQUEAR HORARIO ===           │\n"
+                        "│          === BLOQUEAR HORARIO ===                │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
@@ -255,7 +255,7 @@ def run_loop():
                     print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│         === DESBLOQUEAR HORARIO ===         │\n"
+                        "│         === DESBLOQUEAR HORARIO ===              │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
@@ -278,7 +278,7 @@ def run_loop():
             print(
                         "\n"
                         "┌──────────────────────────────────────────────────┐\n"
-                        "│           === REGISTRO DE LOGS ===           │\n"
+                        "│           === REGISTRO DE LOGS ===               │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
             ver_log()

@@ -110,5 +110,13 @@
     "email": "wnavarrete@gmail.com",
     "telefono": "11334455",
     "activo": false
+  },
+  "44452151": {
+    "dni": "44452151",
+    "nombre": "Facundo",
+    "apellido": "Suarez",
+    "email": "",
+    "telefono": "",
+    "activo": true
   }
 }
