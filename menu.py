@@ -65,8 +65,8 @@ def menu_turnos():
 def run_loop():
 
     mostrar_bienvenida()
-
-    while True:
+    op = ""
+    while op != "0":
 
         esValido = True  # Control de submenus
         menu_ppal()
@@ -305,7 +305,6 @@ def run_loop():
         # ---------------- SALIR ----------------
         elif op == "0":
             print("\nChau!")
-            break
         
         else:
             print("Opcion invalida.")
