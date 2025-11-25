@@ -1,6 +1,6 @@
 from os import remove
 from utils import limpiar_pantalla, validar_fecha, validar_hora, validar_dni
-from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes, log
+from storage import cargar_turnos, guardar_turnos, _obtener_next_turno_id, cargar_clientes, log, cargar_slots_bloq, guardar_slots_bloq
 from GMAIL import mensaje_confirmacion, mensaje_modificacion, mensaje_eliminacion
 import smtplib
 from datetime import datetime
@@ -19,7 +19,11 @@ def _existe_turno_en_slot(turnos, fecha, hora):
 
 # Verifica si un horario específico está bloqueado para una fecha
 def _slot_bloqueado(fecha, hora):
-    return hora in bloqueos_por_fecha.get(fecha, set())
+    """
+    Verifica si un horario específico está bloqueado para una fecha
+    """
+    bloqueados = cargar_slots_bloq()
+    return hora in bloqueados.get(fecha, [])
 
 
 # Verifica que la fecha y hora del turno sean futuras (no pasadas)

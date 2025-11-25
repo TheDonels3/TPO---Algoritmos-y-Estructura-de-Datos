@@ -7,6 +7,7 @@ from datetime import datetime
 ARCHIVO_LOG = "archivos/logs.log"
 CLIENTES_JSON = "archivos/clientes.json"
 TURNS_JSON = "archivos/turnos.json"
+TURNS_BLOQ_JSON = "archivos/turnos_bloq.json"
 
 # ========== FUNCIONES PARA CLIENTES ==========
 def cargar_clientes():
@@ -85,13 +86,40 @@ def guardar_turnos(turnos_list):
         print(f"✖ Error al guardar turnos: {e}")
         return False
 
+def guardar_slots_bloq(slots_bloq):
+    try: 
+        ruta_actual = os.path.dirname(os.path.abspath(__file__))
+        ruta_archivo = os.path.join(ruta_actual, TURNS_BLOQ_JSON)
+        
+        with open(ruta_archivo, 'w',encoding='utf-8') as f:
+            json.dump(slots_bloq, f,ensure_ascii=False, indent=2)
+        return True
+            
+    except IOError as e:
+        print(f"✖ Error inesperado: {e}")
+        return False
+
+def cargar_slots_bloq():
+    ruta_actual = os.path.dirname(os.path.abspath(__file__))
+    ruta_archivo = os.path.join(ruta_actual, TURNS_BLOQ_JSON)
+    if os.path.exists(ruta_archivo):
+        try:
+            with open (ruta_archivo, 'r', encoding='utf-8') as f:
+                return json.load(f) or {}
+        except (json.JSONDecodeError) as e:
+            print(f"⚠ Error al cargar turnos bloqueados: {e}. Iniciando con diccionario vacío.")
+            return {}
+        except (IOError) as e:
+            print(f"⚠ Error al cargar turnos bloqueados: {e}. Iniciando con lista vacío.")
+            return {}
+    return {} 
 
 # Slots bloqueados: lista de tuplas (fecha, hora)
-slots_bloqueados = []
+##slots_bloqueados = []
 
 # Conjuntos por fecha para 'bloqueos' (slots no disponibles)
 # {"2025-10-08": {"10:30", "14:00"}} -> Estructura del Diccionario
-bloqueos_por_fecha = {}
+##bloqueos_por_fecha = {}
 
 # ========== FUNCIONES PARA LOGS ==========
 
