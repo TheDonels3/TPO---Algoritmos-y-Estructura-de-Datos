@@ -83,7 +83,15 @@
     "dni": "34137129",
     "nombre": "walter",
     "apellido": "navarrete",
-    "email": "",
+    "email": "walter@gmail.com",
+    "telefono": "1137588933",
+    "activo": true
+  },
+  "16883453": {
+    "dni": "16883453",
+    "nombre": "Julio",
+    "apellido": "Argento",
+    "email": "julio@gmail.com",
     "telefono": "",
     "activo": true
   }

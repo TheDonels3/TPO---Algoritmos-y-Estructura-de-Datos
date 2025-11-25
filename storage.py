@@ -1,7 +1,10 @@
 import json
 import os
+from datetime import datetime
+
 
 # Rutas de archivos JSON
+ARCHIVO_LOG = "archivos/logs.log"
 CLIENTES_JSON = "archivos/clientes.json"
 TURNS_JSON = "archivos/turnos.json"
 
@@ -89,4 +92,45 @@ slots_bloqueados = []
 # Conjuntos por fecha para 'bloqueos' (slots no disponibles)
 # {"2025-10-08": {"10:30", "14:00"}} -> Estructura del Diccionario
 bloqueos_por_fecha = {}
+
+# ========== FUNCIONES PARA LOGS ==========
+
+#Funcion de Creacion de Log (Avisos)
+def log(tipo, funcion, mensaje):
+    """
+    Escribe una línea en el archivo de log y verifica existencia
+    """
+    ruta_actual = os.path.dirname(os.path.abspath(__file__))
+    ruta_completa = os.path.join(ruta_actual, ARCHIVO_LOG)
+
+    if not os.path.exists(ruta_completa):
+        with open(ruta_completa, "w", encoding="utf-8") as f:
+            print()
+
+    with open(ruta_completa, "a", encoding="utf-8") as f:
+        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"{fecha} | {tipo} | {funcion} | {mensaje}\n")
+
+
+# Funcion para VISUALIZAR el Log
+def ver_log():
+    """
+    Muestra en pantalla el contenido del archivo de log.
+    """
+    try:
+        ruta_actual = os.path.dirname(os.path.abspath(__file__))
+        ruta_completa = os.path.join(ruta_actual, ARCHIVO_LOG)
+        
+        with open(ruta_completa, "r", encoding="utf-8") as f:
+            contenido = f.read()
+
+        if contenido.strip() == "":
+            print("El archivo de LOG está vacío.")
+        else:
+            print(contenido)
+
+    except FileNotFoundError:
+        print("✖ El archivo de LOG no existe.")
+
+
 

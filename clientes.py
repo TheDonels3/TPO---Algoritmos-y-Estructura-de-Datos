@@ -1,5 +1,5 @@
 from utils import limpiar_pantalla, validar_dni, validarEmail
-from storage import guardar_clientes, cargar_clientes
+from storage import guardar_clientes, cargar_clientes, log
 
 def validar_email_unico(email, clientes, dni_excluir=None):
     """
@@ -94,8 +94,10 @@ def validar_alta_cliente():
 
     except (AttributeError, ValueError):
         print("✖ Error: Valores invalidos proporcionados.")
+        log("ERRO", "validar_alta_cliente", "AttributeError o ValueError: Valores invalidos proporcionados")
     except Exception as e:
         print(f"Error inesperado: {e}")
+        log("ERRO", "validar_alta_cliente", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -125,8 +127,10 @@ def validar_modificacion_cliente():
         modificar_cliente(dni)
     except (AttributeError, ValueError):
         print("✖ Error: Valores invalidos proporcionados.")
+        log("ERRO", "validar_modificacion_cliente", "AttributeError o ValueError: Valores invalidos proporcionados")
     except Exception as e:
         print(f"Error inesperado: {e}")
+        log("ERRO", "validar_modificacion_cliente", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -136,38 +140,7 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
     try:
         # Carga los clientes desde el archivo
         clientes = cargar_clientes()
-        """
-        
-        
-        # Verifica que el DNI sea valido
-        if not validar_dni(dni):
-            print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
-            input("\nEnter para continuar...")
-            limpiar_pantalla()
-            return
-        
-        # Verifica si el DNI ya existe
-        if dni in clientes:
-            print("✖ Ya existe un cliente con ese DNI.")
-            input("\nEnter para continuar...")
-            limpiar_pantalla()
-            return
-        
-        #Verificar que el Gmail cumpla el formato
-        if not validarEmail(email):
-            print("✖ EMAIL invalido. Debe ser una dirección de Gmail válida.")
-            input("\nEnter para continuar...")
-            limpiar_pantalla()
-            return
-
-        #Verificar si el GMAIL ya existe
-        for c in clientes.values():
-            if c.get("email", "") == email:
-                print("✖ Ya existe un cliente con ese email Gmail.")
-                input("\nEnter para continuar...")
-                limpiar_pantalla()
-                return
-        """
+       
         # Crea un nuevo registro de cliente
         clientes[dni] = {
             "dni": dni,
@@ -181,11 +154,14 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
         # Guarda el nuevo cliente
         guardar_clientes(clientes)
         print("✔ Cliente registrado.")
+        log("INFO", "alta_cliente", f"Cliente DNI {dni} registrado correctamente")
 
     except AttributeError:
         print("✖ Error: Valores invalidos proporcionados.")
+        log("ERRO", "alta_cliente", f"AttributeError: {e}")
     except Exception as e:
         print(f"✖ Error inesperado al registrar cliente: {e}")
+        log("ERRO", "alta_cliente", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -214,8 +190,10 @@ def listar_clientes(solo_activos=False):
             
     except KeyError as e:
         print(f"✖ Error: Campo faltante en datos del cliente: {e}")
+        log("ERRO", "listar_clientes", f"KeyError: {e}")
     except Exception as e:
         print(f"✖ Error al listar clientes: {e}")
+        log("ERRO", "listar_clientes", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -315,13 +293,17 @@ def modificar_cliente(dni):
         # Guarda los cambios
         guardar_clientes(clientes)
         print("\n✔ Cliente actualizado correctamente.")
+        log("INFO", "modificar_cliente", f"Cliente DNI {dni} modificado correctamente")
 
     except KeyError as e:
         print(f"✖ Error: Campo faltante en cliente: {e}")
+        log("ERRO", "modificar_cliente", f"KeyError: {e}")
     except KeyboardInterrupt:
         print("\n✖ Operacion cancelada por el usuario.")
+        log("INFO", "modificar_cliente", "Operacion cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error al modificar cliente: {e}")
+        log("ERRO", "modificar_cliente", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -344,11 +326,14 @@ def baja_logica_cliente(dni):
         c["activo"] = False
         guardar_clientes(clientes)
         print("✔ Baja logica aplicada (cliente inactivo).")
+        log("INFO", "baja_logica_cliente", f"Cliente DNI {dni} marcado como inactivo")
 
     except KeyError:
         print("✖ Error: Estructura de cliente invalida.")
+        log("ERRO", "baja_logica_cliente", "KeyError: Estructura de cliente invalida")
     except Exception as e:
         print(f"✖ Error al aplicar baja logica: {e}")
+        log("ERRO", "baja_logica_cliente", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -361,15 +346,16 @@ def baja_fisica_cliente(dni):
 
         # Verifica si el cliente existe
         if dni in clientes:
-            # En lugar de usar 'del'.
             del clientes[dni]
             guardar_clientes(clientes)
             print("✔ Cliente eliminado fisicamente.")
+            log("INFO", "baja_fisica_cliente", f"Cliente DNI {dni} eliminado fisicamente")
         else:
             print("✖ No existe un cliente con ese DNI.")
 
     except Exception as e:
         print(f"✖ Error al eliminar cliente: {e}")
+        log("ERRO", "baja_fisica_cliente", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()

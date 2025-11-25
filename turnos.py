@@ -1,7 +1,7 @@
 from os import remove
 from utils import limpiar_pantalla, validar_fecha, validar_hora, validar_dni
-from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes
-from GMAIL import mensaje_confirmacion
+from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes, log
+from GMAIL import mensaje_confirmacion, mensaje_modificacion, mensaje_eliminacion
 import smtplib
 from datetime import datetime
 
@@ -36,6 +36,7 @@ def _es_fecha_hora_futura(fecha, hora):
         # Comparar
         return fecha_hora_turno > ahora
     except ValueError:
+        log("ERRO", "_es_fecha_hora_futura", f"ValueError: Fecha u hora inválida - {fecha} {hora}")
         # Si hay error al parsear, retornar False por seguridad
         return False
 
@@ -119,7 +120,7 @@ def alta_turno(dni, fecha, hora):
 
         # Si todas las validaciones pasan, se crea el turno y se guarda
         next_id = _obtener_next_turno_id(turnos)
-        t = {
+        turno = {
             "id": next_id,           # Se genera un nuevo ID único
             "dni": dni,              # DNI del cliente
             "fecha": fecha,          # Fecha del turno
@@ -127,25 +128,26 @@ def alta_turno(dni, fecha, hora):
             "estado": "Ocupado"      # Estado inicial del turno
         }
         # Se agrega el turno a la lista global de turnos
-        turnos.append(t)
+        turnos.append(turno)
 
-        ''' Envío de correo de confirmación 
-        
-        '''
+        # Envío de correo de confirmación
         try:
-
             cliente = clientes.get(dni)
             if not cliente or not cliente.get("email"):
                 print("⚠ El cliente no tiene un email registrado. No se enviará confirmación.")
             else:
-                mensaje_confirmacion(t)
+                mensaje_confirmacion(cliente,turno)
+                log("INFO", "alta_turno", f"Correo de confirmación enviado a {cliente.get('email')} para turno ID {turno['id']}")
 
         except smtplib.SMTPException as e:
             print(f"✖ Error al enviar el correo de confirmación: {e}")
+            log("ERRO", "alta_turno", f"SMTPException: {e}")
         except KeyError as e_mail:
             print(f"✖ Error: El cliente no tiene un email válido registrado: {e_mail}")
+            log("ERRO", "alta_turno", f"KeyError: {e_mail}")
         except Exception as e_mailenviado:
             print(f"✖ Error inesperado al enviar el correo de confirmación: {e_mailenviado}")
+            log("ERRO", "alta_turno", f"Exception: {e_mailenviado}")
 
         # Guardamos después de intentar enviar el mail
         guardar_turnos(turnos)
@@ -154,10 +156,13 @@ def alta_turno(dni, fecha, hora):
     except KeyError as e:
         # Esto saltaría si _cliente_activo falla al buscar c["activo"]
         print(f"✖ Error: Faltan datos en el registro del cliente: {e}")
+        log("ERRO", "alta_turno", f"KeyError: {e}")
     except KeyboardInterrupt:
         print("\n✖ Operación cancelada por el usuario.")
+        log("INFO", "alta_turno", "Operación cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error inesperado al registrar el turno: {e}")
+        log("ERRO", "alta_turno", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -370,25 +375,38 @@ def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None)
         # 7. Guardar y notificar
         guardar_turnos(turnos)
         print(f"✔ Turno ID {id_turno} actualizado: {', '.join(cambios_realizados)}.")
-
+        
         # 8. Enviar email de re-confirmación
         try:
-            print("Enviando email de re-confirmación...")
-            mensaje_confirmacion(turno_a_modificar)
+                # print("Enviando email de re-confirmación...")
+                # mensaje_confirmacion(turno_a_modificar)
+                cliente = clientes.get(nuevo_dni)
+                if not cliente or not cliente.get("email"):
+                    print("⚠ El cliente no tiene un email registrado. No se enviará confirmación.")
+                else:
+                    mensaje_modificacion(cliente,turno_a_modificar)
+                    log("INFO", "modificar_turno", f"Correo de re-confirmación enviado a {cliente.get('email')} para turno ID {turno_a_modificar['id']}")
+
         except smtplib.SMTPException as e:
             print(f"⚠ Error al enviar la re-confirmación (SMTP): {e}")
+            log("ERRO", "modificar_turno", f"SMTPException: {e}")
         except KeyError as e_mail:
             print(f"⚠ Error: El nuevo cliente no tiene un email válido registrado: {e_mail}")
+            log("ERRO", "modificar_turno", f"KeyError: {e_mail}")
         except Exception as e_mailenviado:
             print(f"⚠ Error inesperado al enviar la re-confirmación: {e_mailenviado}")
+            log("ERRO", "modificar_turno", f"Exception: {e_mailenviado}")
         
 
     except KeyError as e:
         print(f"✖ Error: Faltan datos en el registro del turno/cliente: {e}")
+        log("ERRO", "modificar_turno", f"KeyError: {e}")
     except KeyboardInterrupt:
         print("\n✖ Operación cancelada por el usuario.")
+        log("INFO", "modificar_turno", "Operación cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error inesperado al modificar el turno: {e}")
+        log("ERRO", "modificar_turno", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
@@ -455,21 +473,18 @@ def bloquear_slot(fecha, hora):
             }
             turnos.append(t)
             guardar_turnos(turnos)
+            log("INFO", "bloquear_slot", f"Slot {fecha} {hora} ha sido creado y bloqueado exitosamente.")
             print(f"✔ Slot {fecha} {hora} ha sido creado y bloqueado exitosamente.")
 
     except KeyboardInterrupt:
         print("\n✖ Operación cancelada por el usuario.")
+        log("INFO", "bloquear_slot", "Operación cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error inesperado al bloquear el slot: {e}")
+        log("ERRO", "bloquear_slot", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
-
-
-
-
-
-
 
 
 # ---------------------------------------------------------
@@ -506,6 +521,7 @@ def desbloquear_slot(fecha, hora):
                     turno["estado"] = "Libre"
                     print(f"✔ Turno {fecha} {hora} desbloqueado.")
                     guardar_turnos(turnos)
+                    log("INFO", "desbloquear_slot", f"Turno {fecha} {hora} desbloqueado.")
                     return
                 
                 # Si el turno ya estaba libre, informa que no se puede desbloquear
@@ -518,11 +534,13 @@ def desbloquear_slot(fecha, hora):
     
     except KeyError as e:
         print(f"✖ Error: Campo faltante en datos del turno: {e}")
+        log("ERRO", "desbloquear_slot", f"KeyError: {e}")
     except KeyboardInterrupt:
         print("\n✖ Operación cancelada por el usuario.")
+        log("INFO", "desbloquear_slot", "Operación cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error al desbloquear turno: {e}")
-
+        log("ERRO", "desbloquear_slot", f"Exception: {e}")
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()

@@ -1,4 +1,5 @@
 from utils import limpiar_pantalla
+from storage import ver_log
 from clientes import validar_alta_cliente,validar_modificacion_cliente,listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
 
@@ -121,8 +122,6 @@ def run_loop():
                         "└──────────────────────────────────────────────────┘"
                     )
                     validar_modificacion_cliente()
-                    # dni = input("DNI a modificar: ").strip()
-                    # modificar_cliente(dni)
 
                 # Baja logica (desactiva cliente sin borrarlo)
                 elif opc == "5":
@@ -291,7 +290,15 @@ def run_loop():
         # ---------------- LOG ----------------
         # Mostrar registro de logs o notificaciones (a implementar)
         elif op == "3":
-            ##ver_log()
+
+            limpiar_pantalla()
+            print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│           === REGISTRO DE LOGS ===           │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
+            ver_log()
             input("\nEnter para continuar...")
             limpiar_pantalla()
 
