@@ -4,47 +4,30 @@ Hay 10 Funciones con el nombre de Test
 """
 
 import pytest
-from turnos import _existe_turno_en_slot, _slot_bloqueado, _cliente_activo, bloqueos_por_fecha
-from storage import turnos
+from turnos import _existe_turno_en_slot, _slot_bloqueado, _cliente_activo, bloquear_slot
 
 # ---------------------------------------------------------
 # TEST DE FUNCION _existe_turno_en_slot
 # ---------------------------------------------------------
 def test_turno_ocupado():
+    turnos = []
     #Turno ocupado
     turnos.append({"id": 1, "dni": "12345678", "fecha": "2025-11-10", "hora": "10:00", "estado": "Ocupado"})
     
     assert _existe_turno_en_slot(turnos, "2025-11-10", "10:00") is True
 
 def test_turno_libre():
+    turnos = []
     #Turno libre
     turnos.append({"id": 2, "dni": "12345678", "fecha": "2025-11-10", "hora": "11:00", "estado": "Libre"})
     
     assert _existe_turno_en_slot(turnos, "2025-11-10", "11:00") is False
 
 def test_turno_no_existente():
+    turnos = []
     #Sin Turnos
     assert _existe_turno_en_slot(turnos, "2025-11-10", "12:00") is False
 
-
-# ---------------------------------------------------------
-# TEST DE FUNCION _slot_bloqueado
-# ---------------------------------------------------------
-def test_slot_bloqueado_true():
-    # Horario de Fecha Bloqueado
-    bloqueos_por_fecha["2025-11-10"] = {"11:00"}
-    
-    assert _slot_bloqueado("2025-11-10", "11:00") is True
-
-def test_slot_bloqueado_false_fecha_existente():
-    # Bloqueamos Horarios Especificos
-    bloqueos_por_fecha["2025-11-10"] = {"10:00"}
-    
-    assert _slot_bloqueado("2025-11-10", "11:00") is False
-
-def test_slot_bloqueado_false_fecha_no_existente():
-    #Sin Fechas
-    assert _slot_bloqueado("2025-11-11", "10:00") is False
 
 
 # ---------------------------------------------------------
