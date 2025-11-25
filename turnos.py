@@ -27,6 +27,30 @@ def _cliente_activo(clientes, dni):
     return bool(c and c.get("activo", False))
 
 
+# Obtiene el nombre completo del cliente dado su DNI
+def _obtener_nombre_cliente(dni):
+    """
+    Retorna el nombre y apellido del cliente para mostrar en listados.
+    Si el DNI es especial (Bloqueado, Sin Asignar) o no se encuentra, retorna un texto descriptivo.
+    """
+    # Casos especiales
+    if dni == "Bloqueado":
+        return "[HORARIO BLOQUEADO]"
+    if dni == "Sin Asignar":
+        return "[Sin Asignar]"
+    
+    # Buscar cliente en el sistema
+    clientes = cargar_clientes()
+    cliente = clientes.get(dni)
+    
+    if cliente:
+        nombre = cliente.get("nombre", "")
+        apellido = cliente.get("apellido", "")
+        return f"{apellido}, {nombre}"
+    else:
+        return "[Cliente no encontrado]"
+
+
 # ---------------------------------------------------------
 # FUNCIÓN PRINCIPAL: ALTA DE TURNO
 # ---------------------------------------------------------
@@ -85,7 +109,13 @@ def alta_turno(dni, fecha, hora):
         
         '''
         try:
-            mensaje_confirmacion(t)
+
+            cliente = clientes.get(dni)
+            if not cliente or not cliente.get("email"):
+                print("⚠ El cliente no tiene un email registrado. No se enviará confirmación.")
+            else:
+                mensaje_confirmacion(t)
+
         except smtplib.SMTPException as e:
             print(f"✖ Error al enviar el correo de confirmación: {e}")
         except KeyError as e_mail:
@@ -128,7 +158,8 @@ def listar_turnos():
         
         # Recorre la lista de turnos (ordenada por fecha y hora) y muestra la información de cada uno
         for t in sorted(turnos, key=lambda x: (x["fecha"], x["hora"])):
-            print(f"#{t['id']} | {t['fecha']} {t['hora']} | DNI {t['dni']} | {t['estado']}")
+            nombre_cliente = _obtener_nombre_cliente(t['dni'])
+            print(f"#{t['id']} | {t['fecha']} {t['hora']} | DNI: {t['dni']} | {nombre_cliente} | {t['estado']}")
 
     except KeyError as e:
         print(f"✖ Error: Campo faltante en datos del turno: {e}")
@@ -165,7 +196,8 @@ def listar_por_dni(dni):
         if not lista_dni:
             print(f"No hay turnos registrados para el DNI {dni}.")
         else:
-            print(f"--- Turnos para el DNI: {dni} ---")
+            nombre_cliente = _obtener_nombre_cliente(dni)
+            print(f"--- Turnos para el DNI: {dni} - {nombre_cliente} ---")
             # Ordena los turnos por fecha y luego por hora
             for t in sorted(lista_dni, key=lambda x: (x["fecha"], x["hora"])):
                 print(f"#{t['id']} | {t['fecha']} {t['hora']} | {t['estado']}")
@@ -203,7 +235,8 @@ def listar_por_fecha(fecha):
         if not lista_fecha:
             print("No hay turnos para esa fecha.")
         for t in sorted(lista_fecha, key=lambda x: x["hora"]):
-            print(f"#{t['id']} | {t['hora']} | DNI {t['dni']} | {t['estado']}")
+            nombre_cliente = _obtener_nombre_cliente(t['dni'])
+            print(f"#{t['id']} | {t['hora']} | DNI: {t['dni']} | {nombre_cliente} | {t['estado']}")
     
     except KeyError as e:
         print(f"✖ Error: Campo faltante en datos del turno: {e}")

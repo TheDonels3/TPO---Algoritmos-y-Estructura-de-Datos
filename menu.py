@@ -1,5 +1,5 @@
 from utils import limpiar_pantalla
-from clientes import val_alta_cliente,val_modificacion_cliente,listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
+from clientes import validar_alta_cliente,validar_modificacion_cliente,listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
@@ -80,29 +80,71 @@ def run_loop():
                 
                 # Alta de cliente nuevo
                 if opc == "1":
-                    val_alta_cliente()
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│         === ALTA DE NUEVO CLIENTE ===        │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
+                    validar_alta_cliente()
 
                 # Listado de todos los clientes
                 elif opc == "2":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│       === LISTADO DE TODOS LOS CLIENTES ===  │\n"
+                        "└──────────────────────────────────────────────────┘\n"
+                    )
                     listar_clientes(solo_activos=False)
 
                 # Listado solo de clientes activos
                 elif opc == "3":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│     === LISTADO DE CLIENTES ACTIVOS ===     │\n"
+                        "└──────────────────────────────────────────────────┘\n"
+                    )
                     listar_clientes(solo_activos=True)
 
                 # Modificar datos de cliente existente
                 elif opc == "4":
-                    val_modificacion_cliente()
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│         === MODIFICAR CLIENTE ===            │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
+                    validar_modificacion_cliente()
                     # dni = input("DNI a modificar: ").strip()
                     # modificar_cliente(dni)
 
                 # Baja logica (desactiva cliente sin borrarlo)
                 elif opc == "5":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│        === BAJA LÓGICA DE CLIENTE ===       │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     dni = input("DNI para baja logica: ").strip()
                     baja_logica_cliente(dni)
 
                 # Baja fisica (elimina cliente completamente)
                 elif opc == "6":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│        === BAJA FÍSICA DE CLIENTE ===       │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     dni = input("DNI para baja fisica: ").strip()
                     baja_fisica_cliente(dni)
 
@@ -122,6 +164,13 @@ def run_loop():
 
                 # Crear nuevo turno
                 if opc == "1":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│           === CREAR NUEVO TURNO ===           │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     dni = input("DNI cliente: ").strip()
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
@@ -129,20 +178,48 @@ def run_loop():
 
                 # Listar todos los turnos
                 elif opc == "2":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│        === LISTADO GENERAL DE TURNOS ===    │\n"
+                        "└──────────────────────────────────────────────────┘\n"
+                    )
                     listar_turnos()
 
                 # Listar turnos por DNI
                 elif opc == "3":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│          === TURNOS POR CLIENTE ===          │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     dni = input("DNI: ").strip()
                     listar_por_dni(dni)
 
                 # Listar turnos por fecha
                 elif opc == "4":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│           === TURNOS POR FECHA ===           │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     listar_por_fecha(fecha)
 
                 # Modificar un turno existente
                 elif opc == "5":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│            === MODIFICAR TURNO ===            │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     try:
                         tid = int(input("ID de turno a modificar: ").strip())
                     except ValueError:
@@ -161,6 +238,13 @@ def run_loop():
 
                 # Eliminar un turno existente
                 elif opc == "6":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│            === ELIMINAR TURNO ===             │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     try:
                         tid = int(input("ID de turno a eliminar: ").strip())
                     except ValueError:
@@ -172,12 +256,26 @@ def run_loop():
 
                 # Bloquear un horario especifico
                 elif opc == "7":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│          === BLOQUEAR HORARIO ===           │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
                     bloquear_slot(fecha, hora)
 
                 # Desbloquear un horario especifico
                 elif opc == "8":
+                    limpiar_pantalla()
+                    print(
+                        "\n"
+                        "┌──────────────────────────────────────────────────┐\n"
+                        "│         === DESBLOQUEAR HORARIO ===         │\n"
+                        "└──────────────────────────────────────────────────┘"
+                    )
                     fecha = input("Fecha (YYYY-MM-DD): ").strip()
                     hora = input("Hora (HH:mm): ").strip()
                     desbloquear_slot(fecha, hora)

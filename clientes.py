@@ -1,7 +1,34 @@
 from utils import limpiar_pantalla, validar_dni, validarEmail
 from storage import guardar_clientes, cargar_clientes
 
-def val_alta_cliente():
+def validar_email_unico(email, clientes, dni_excluir=None):
+    """
+    Valida que el email tenga formato correcto y que no esté duplicado.
+    
+    Args:
+        email: Email a validar
+        clientes: Diccionario de clientes
+        dni_excluir: DNI a excluir de la validación (para modificaciones)
+    
+    Returns:
+        tuple: (es_valido: bool, mensaje_error: str)
+    """
+    # Validar formato
+    if not validarEmail(email):
+        return False, "✖ EMAIL invalido. Debe ser una dirección de Gmail válida."
+    
+    # Verificar si el email ya existe en otro cliente
+    for dni_cliente, cliente in clientes.items():
+        # Excluir el DNI del cliente actual en caso de modificación
+        if dni_excluir and dni_cliente == dni_excluir:
+            continue
+        
+        if cliente.get("email", "") == email:
+            return False, "✖ Ya existe un cliente con ese email Gmail."
+    
+    return True, ""
+
+def validar_alta_cliente():
     try:
         """
         Bucle para validar datos ingresados y crear el cliente
@@ -46,21 +73,20 @@ def val_alta_cliente():
             input("\nEnter para continuar...")
             limpiar_pantalla()
         
-        email = input("Email (opcional): ").strip().lower()
-        if email != "":
-            if not validarEmail(email):
-                print("✖ EMAIL invalido. Debe ser una dirección de Gmail válida.")
-                input("\nEnter para continuar...")
-                limpiar_pantalla()
-                return
-            #Verificar si el GMAIL ya existe
-            for c in clientes.values():
-                # los mail son opcionales, no todos tienen, por eso el ""
-                if c.get("email", "") == email:
-                    print("✖ Ya existe un cliente con ese email Gmail.")
-                    input("\nEnter para continuar...")
-                    limpiar_pantalla()
-                    return
+        # Bucle para solicitar Email (opcional) hasta que sea válido
+        while True:
+            email = input("Email (opcional): ").strip().lower()
+            if email == "":
+                break
+            
+            # Validar email usando la función reutilizable
+            es_valido, mensaje_error = validar_email_unico(email, clientes)
+            if es_valido:
+                break
+            
+            print(mensaje_error)
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
         
         tel = input("Telefono (opcional): ").strip()
         
@@ -74,7 +100,7 @@ def val_alta_cliente():
         input("\nEnter para continuar...")
         limpiar_pantalla()
 
-def val_modificacion_cliente():
+def validar_modificacion_cliente():
     try:
          # Carga los clientes desde el archivo
         clientes = cargar_clientes()
@@ -249,28 +275,15 @@ def modificar_cliente(dni):
                 email = c['email']
                 break
             
-            # Validar formato de email si no está vacío
-            if email_input and not validarEmail(email_input):
-                print("✖ EMAIL inválido. Debe ser una dirección de Gmail válida.")
-                input("\nEnter para continuar...")
-                limpiar_pantalla()
-                continue
+            # Validar email usando la función reutilizable (excluyendo el DNI actual)
+            es_valido, mensaje_error = validar_email_unico(email_input, clientes, dni_excluir=dni)
+            if es_valido:
+                email = email_input
+                break
             
-            # Verificar si el email ya existe en otro cliente
-            email_duplicado = False
-            for dni_cliente, cliente in clientes.items():
-                if dni_cliente != dni and cliente.get("email", "") == email_input:
-                    print("✖ Ya existe otro cliente con ese email Gmail.")
-                    input("\nEnter para continuar...")
-                    limpiar_pantalla()
-                    email_duplicado = True
-                    break
-            
-            if email_duplicado:
-                continue
-            
-            email = email_input
-            break
+            print(mensaje_error)
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
         
         # Solicita teléfono
         tel = input(f"Teléfono [{c['telefono']}]: ").strip()

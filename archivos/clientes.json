@@ -1,12 +1,4 @@
 {
-  "34137129": {
-    "dni": "34137129",
-    "nombre": "Walter",
-    "apellido": "Navarrete",
-    "email": "walter@gmail.com",
-    "telefono": "1537588933",
-    "activo": false
-  },
   "22344567": {
     "dni": "22344567",
     "nombre": "Mateo",
@@ -78,5 +70,21 @@
     "email": "",
     "telefono": "",
     "activo": false
+  },
+  "23456543": {
+    "dni": "23456543",
+    "nombre": "Maria",
+    "apellido": "Perez",
+    "email": "maria@gmail.com",
+    "telefono": "1133223344",
+    "activo": true
+  },
+  "34137129": {
+    "dni": "34137129",
+    "nombre": "walter",
+    "apellido": "navarrete",
+    "email": "",
+    "telefono": "",
+    "activo": true
   }
 }
