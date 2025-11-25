@@ -1,57 +1,81 @@
 import smtplib
-from storage import cargar_clientes
+from storage import log
 
-# Configuracion del servidor SMTP de Gmail
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 587
-
-clientes = cargar_clientes()
-
-
-# Funcion para enviar el mensaje de confirmacion del turno
-def mensaje_confirmacion(turno):
-
-    # Direccion del remitente y clave de aplicacion de Gmail
-    from_addr = "gestordeturnos1@gmail.com"
-    password = "rzip hnkk bubg dwlg"
-
-    # Obtener el cliente segun el DNI del turno
-    dni = turno['dni']
-    cliente = clientes.get(dni)
-
-    # Direccion de correo del destinatario
-    to_addr = cliente['email']
-
-    # Construir el mensaje de correo
+# Funcion para Informar la Confizacion del Turno
+def mensaje_confirmacion(cliente, turno):
     mensaje = (
-        f"From: {from_addr}\r\n"
-        f"To: {to_addr}\r\n"
-        f"Subject: Turno Confirmado\r\n"
-        "\r\n"
-        f"✅ Turno confirmado ✅\n\n"
+        "Subject: Turno Confirmado\r\n\r\n"
+        f"✅ *TURNO CONFIRMADO*\n\n"
         f"👤 Nombre: {cliente['nombre']} {cliente['apellido']}\n"
         f"🪪 DNI: {cliente['dni']}\n"
         f"📅 Fecha: {turno['fecha']}\n"
-        f"⏰ Hora: {turno['hora']}\n"
-        "\n"
-        "Este es un mensaje automatico. No responder."
+        f"⏰ Hora: {turno['hora']}\n\n"
+        "Este es un mensaje automático. No responder."
     )
 
-    try:    
-        # Conectar con el servidor SMTP de Gmail
-        server = smtplib.SMTP(host=SMTP_HOST, port=SMTP_PORT, timeout=10)
+    enviar_mensaje(cliente, mensaje)
+
+
+# Funcion para Informar el Cambio de Turno
+def mensaje_modificacion(cliente, turno):
+    mensaje =  (
+        "Subject: Turno Modificado\r\n\r\n"
+        f"♻️ *TU TURNO FUE MODIFICADO*\n\n"
+        f"👤 Nombre: {cliente['nombre']} {cliente['apellido']}\n"
+        f"🪪 DNI: {cliente['dni']}\n"
+        f"📅 Nueva Fecha: {turno['fecha']}\n"
+        f"⏰ Nueva Hora: {turno['hora']}\n\n    "
+        "Este es un mensaje automático. No responder."
+    )
+
+    enviar_mensaje(cliente, mensaje)
+
+
+# Funcion para Informar de la Eliminacion del Turno
+def mensaje_eliminacion(cliente, turno):
+    mensaje =  (
+        "Subject: Turno Cancelado\r\n\r\n"
+        f"❌ *TU TURNO FUE CANCELADO*\n\n"
+        f"👤 Nombre: {cliente['nombre']} {cliente['apellido']}\n"
+        f"🪪 DNI: {cliente['dni']}\n"
+        f"📅 Fecha cancelada: {turno['fecha']}\n"
+        f"⏰ Hora cancelada: {turno['hora']}\n\n"
+        "Este es un mensaje automático. No responder."
+    )
+
+    enviar_mensaje(cliente, mensaje)
+
+
+def enviar_mensaje(cliente, mensaje):
+
+    # Configuracion del servidor SMTP de Gmail
+    SMTP_HOST = "smtp.gmail.com"
+    SMTP_PORT = 587
+
+    PASSWORD = "stsz slbd ikpx nsqa"
+    FROM_ADDR = "gestordeturnos1@gmail.com"
+
+    to_addr = cliente["email"]
+    if not to_addr:
+        print("❌ El cliente no tiene un email registrado.")
+        log("WARN", "enviar_mensaje", f"Cliente DNI {cliente['dni']} no tiene email registrado")
+        return
+
+    try:
+        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)
         server.ehlo()
         server.starttls()
-        server.ehlo()
-        server.login(user=from_addr, password=password)
-        server.sendmail(from_addr, [to_addr], mensaje.encode("utf-8"))
+        server.login(FROM_ADDR, PASSWORD)
+        server.sendmail(FROM_ADDR, [to_addr], mensaje.encode("utf-8"))
+        log("INFO", "enviar_mensaje", f"Correo enviado a {to_addr}")
         print("Correo enviado correctamente ✅")
-    except smtplib.SMTPException as e:
+    except Exception as e:
         print("Error al enviar correo:", e)
+        log("ERRO", "enviar_mensaje", f"Exception: {e}")
     finally:
-        try:
-            server.quit()
-        except Exception:
-            pass
+            try:
+                server.quit()
+            except:
+                print()
 
 
