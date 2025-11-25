@@ -75,48 +75,143 @@ def _obtener_nombre_cliente(dni):
 # FUNCIÓN PRINCIPAL: ALTA DE TURNO
 # ---------------------------------------------------------
 
-def alta_turno(dni, fecha, hora):
+def validar_alta_turno():
     """
-    Registra un nuevo turno para un cliente, si pasa todas las validaciones:
-    - Fecha válida
-    - Hora válida
-    - Cliente activo
-    - Horario no bloqueado
-    - Horario no ocupado
+    Valida y solicita los datos del turno con bucles de validación.
+    Permite reintentar cuando hay errores de validación.
     """
     try:
         clientes = cargar_clientes()
         turnos = cargar_turnos()
+        
+        # Bucle para solicitar DNI hasta que sea válido y el cliente esté activo
+        while True:
+            dni = input("DNI cliente (o 'c' para cancelar): ").strip()
+            
+            if dni.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            if not validar_dni(dni):
+                print("✖ DNI inválido. Deben ser 7 u 8 dígitos.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            if not _cliente_activo(clientes, dni):
+                print("✖ Cliente inexistente o inactivo.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            break
+        
+        # Bucle para solicitar fecha hasta que sea válida y futura
+        while True:
+            fecha = input("Fecha (YYYY-MM-DD) (o 'c' para cancelar): ").strip()
+            
+            if fecha.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            if not validar_fecha(fecha):
+                print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            break
+        
+        # Bucle para solicitar hora hasta que sea válida, futura y disponible
+        while True:
+            hora = input("Hora (HH:mm) (o 'c' para cancelar): ").strip()
+            
+            if hora.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            if not validar_hora(hora):
+                print("✖ Hora inválida. Formato esperado HH:mm.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            # Validar que la fecha y hora sean futuras
+            if not _es_fecha_hora_futura(fecha, hora):
+                print(f"✖ No se puede agendar un turno en una fecha y hora pasadas ({fecha} {hora}).")
+                print("Tip: Verifique que la fecha sea correcta.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                
+                # Preguntar si desea reingresar la fecha
+                reingresar = input("¿Desea reingresar la fecha también? (S/N): ").strip().lower()
+                if reingresar == 's':
+                    # Volver al bucle de fecha
+                    print("\nReiniciando validación de fecha y hora...")
+                    input("\nEnter para continuar...")
+                    limpiar_pantalla()
+                    
+                    # Reiniciar desde la fecha
+                    while True:
+                        fecha = input("Fecha (YYYY-MM-DD) (o 'c' para cancelar): ").strip()
+                        
+                        if fecha.lower() == 'c':
+                            print("✖ Operación cancelada.")
+                            return
+                        
+                        if not validar_fecha(fecha):
+                            print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+                            input("\nEnter para continuar...")
+                            limpiar_pantalla()
+                            continue
+                        
+                        break
+                    
+                    # Volver a validar con la nueva fecha
+                    if not _es_fecha_hora_futura(fecha, hora):
+                        print(f"✖ No se puede agendar un turno en una fecha y hora pasadas ({fecha} {hora}).")
+                        input("\nEnter para continuar...")
+                        limpiar_pantalla()
+                        continue
+                else:
+                    continue
+            
+            if _slot_bloqueado(fecha, hora):
+                print("✖ El horario está BLOQUEADO para esa fecha.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            if _existe_turno_en_slot(turnos, fecha, hora):
+                print("✖ El horario ya está OCUPADO.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            break
+        
+        # Todos los datos son válidos, crear el turno
+        alta_turno(dni, fecha, hora)
+        
+    except KeyboardInterrupt:
+        print("\n✖ Operación cancelada por el usuario.")
+        log("INFO", "validar_alta_turno", "Operación cancelada por el usuario")
+    except Exception as e:
+        print(f"✖ Error inesperado: {e}")
+        log("ERRO", "validar_alta_turno", f"Exception: {e}")
+    finally:
+        input("\nEnter para continuar...")
+        limpiar_pantalla()
 
-        # Validación del formato de fecha (debe ser YYYY-MM-DD)
-        if not validar_fecha(fecha):
-            print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
-            return
-        
-        # Validación del formato de hora (debe ser HH:mm)
-        if not validar_hora(hora):
-            print("✖ Hora inválida. Formato esperado HH:mm.")
-            return
-        
-        # Validación de que la fecha y hora sean futuras
-        if not _es_fecha_hora_futura(fecha, hora):
-            print("✖ No se puede agendar un turno en una fecha y hora pasadas.")
-            return
-        
-        # Verificación de que el cliente exista y esté activo
-        if not _cliente_activo(clientes, dni):
-            print("✖ Cliente inexistente o inactivo.")
-            return
-        
-        # Comprobación de que el horario no esté bloqueado en esa fecha
-        if _slot_bloqueado(fecha, hora):
-            print("✖ El horario está BLOQUEADO para esa fecha.")
-            return
-        
-        # Verificación de que no exista ya un turno ocupado en ese horario
-        if _existe_turno_en_slot(turnos, fecha, hora):
-            print("✖ El horario ya está OCUPADO.")
-            return
+
+def alta_turno(dni, fecha, hora):
+    """
+    Registra un nuevo turno para un cliente.
+    NOTA: Esta función asume que dni, fecha y hora ya fueron validados.
+    """
+    try:
+        clientes = cargar_clientes()
+        turnos = cargar_turnos()
 
         # Si todas las validaciones pasan, se crea el turno y se guarda
         next_id = _obtener_next_turno_id(turnos)
@@ -154,18 +249,11 @@ def alta_turno(dni, fecha, hora):
         print("✔ Turno registrado correctamente.")
         
     except KeyError as e:
-        # Esto saltaría si _cliente_activo falla al buscar c["activo"]
         print(f"✖ Error: Faltan datos en el registro del cliente: {e}")
         log("ERRO", "alta_turno", f"KeyError: {e}")
-    except KeyboardInterrupt:
-        print("\n✖ Operación cancelada por el usuario.")
-        log("INFO", "alta_turno", "Operación cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error inesperado al registrar el turno: {e}")
         log("ERRO", "alta_turno", f"Exception: {e}")
-    finally:
-        input("\nEnter para continuar...")
-        limpiar_pantalla()
 
 
 # ---------------------------------------------------------
@@ -283,73 +371,243 @@ def listar_por_fecha(fecha):
 # FUNCIÓN: MODIFICAR TURNO
 # ---------------------------------------------------------
 
+def validar_modificacion_turno():
+    """
+    Valida y solicita los datos para modificar un turno con bucles de validación.
+    Permite reintentar cuando hay errores de validación.
+    """
+    try:
+        turnos = cargar_turnos()
+        clientes = cargar_clientes()
+        
+        # Bucle para solicitar ID de turno hasta que sea válido y exista
+        while True:
+            tid_input = input("ID de turno a modificar (o 'c' para cancelar): ").strip()
+            
+            if tid_input.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            try:
+                tid = int(tid_input)
+            except ValueError:
+                print("✖ ID inválido. Debe ser un número.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            # Buscar el turno
+            turno_a_modificar = None
+            for turno in turnos:
+                if turno["id"] == tid:
+                    turno_a_modificar = turno
+                    break
+            
+            if not turno_a_modificar:
+                print(f"✖ No se encontró un turno con ID {tid}.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            break
+        
+        print(f"\n=== Datos actuales del turno ===")
+        print(f"ID: {turno_a_modificar['id']}")
+        print(f"DNI: {turno_a_modificar['dni']} - {_obtener_nombre_cliente(turno_a_modificar['dni'])}")
+        print(f"Fecha: {turno_a_modificar['fecha']}")
+        print(f"Hora: {turno_a_modificar['hora']}")
+        print(f"Estado: {turno_a_modificar['estado']}")
+        print("\n=== Ingrese los nuevos datos ===")
+        print("(Dejar vacío para mantener el valor actual)\n")
+        
+        # Bucle para solicitar nuevo DNI (opcional)
+        nuevo_dni = None
+        while True:
+            dni_input = input(f"Nuevo DNI [{turno_a_modificar['dni']}] (vacío=mantener, 'c'=cancelar): ").strip()
+            
+            if dni_input.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            if dni_input == "":
+                nuevo_dni = None
+                break
+            
+            if not validar_dni(dni_input):
+                print("✖ DNI inválido. Deben ser 7 u 8 dígitos.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            if not _cliente_activo(clientes, dni_input):
+                print("✖ Cliente inexistente o inactivo.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            nuevo_dni = dni_input
+            break
+        
+        # Bucle para solicitar nueva fecha (opcional)
+        nueva_fecha = None
+        while True:
+            fecha_input = input(f"Nueva fecha [{turno_a_modificar['fecha']}] (vacío=mantener, 'c'=cancelar): ").strip()
+            
+            if fecha_input.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            if fecha_input == "":
+                nueva_fecha = None
+                break
+            
+            if not validar_fecha(fecha_input):
+                print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            nueva_fecha = fecha_input
+            break
+        
+        # Bucle para solicitar nueva hora (opcional)
+        nueva_hora = None
+        while True:
+            hora_input = input(f"Nueva hora [{turno_a_modificar['hora']}] (vacío=mantener, 'c'=cancelar): ").strip()
+            
+            if hora_input.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
+            if hora_input == "":
+                nueva_hora = None
+                break
+            
+            if not validar_hora(hora_input):
+                print("✖ Hora inválida. Formato esperado HH:mm.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            # Determinar fecha y hora finales para validaciones
+            # Si se cambió la fecha, usar la nueva; si no, usar la actual del turno
+            fecha_final = nueva_fecha if nueva_fecha else turno_a_modificar['fecha']
+            hora_final = hora_input
+            
+            # Validar que la combinación fecha-hora sea futura
+            if not _es_fecha_hora_futura(fecha_final, hora_final):
+                print(f"✖ No se puede modificar a una fecha y hora pasadas ({fecha_final} {hora_final}).")
+                print("Tip: Si necesita cambiar la fecha, vuelva a ingresarla.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                
+                # Preguntar si desea reingresar la fecha
+                reingresar = input("¿Desea reingresar la fecha también? (S/N): ").strip().lower()
+                if reingresar == 's':
+                    # Volver al bucle de fecha
+                    print("\nReiniciando validación de fecha y hora...")
+                    input("\nEnter para continuar...")
+                    limpiar_pantalla()
+                    
+                    # Reiniciar desde la fecha
+                    while True:
+                        fecha_input = input(f"Nueva fecha [{turno_a_modificar['fecha']}] (vacío=mantener, 'c'=cancelar): ").strip()
+                        
+                        if fecha_input.lower() == 'c':
+                            print("✖ Operación cancelada.")
+                            return
+                        
+                        if fecha_input == "":
+                            nueva_fecha = None
+                            break
+                        
+                        if not validar_fecha(fecha_input):
+                            print("✖ Fecha inválida. Formato esperado YYYY-MM-DD.")
+                            input("\nEnter para continuar...")
+                            limpiar_pantalla()
+                            continue
+                        
+                        nueva_fecha = fecha_input
+                        break
+                    
+                    # Si canceló la fecha, continuar con hora
+                    if nueva_fecha:
+                        fecha_final = nueva_fecha
+                        # Volver a validar con la nueva fecha
+                        if not _es_fecha_hora_futura(fecha_final, hora_final):
+                            print(f"✖ No se puede modificar a una fecha y hora pasadas ({fecha_final} {hora_final}).")
+                            input("\nEnter para continuar...")
+                            limpiar_pantalla()
+                            continue
+                else:
+                    continue
+            
+            if _slot_bloqueado(fecha_final, hora_final):
+                print(f"✖ El horario {fecha_final} {hora_final} está BLOQUEADO.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            # Validar que no exista otro turno en ese horario
+            slot_ocupado = False
+            for t in turnos:
+                if t["id"] != tid and t["fecha"] == fecha_final and t["hora"] == hora_final and t["estado"] == "Ocupado":
+                    print(f"✖ El horario {fecha_final} {hora_final} ya está OCUPADO por otro turno.")
+                    input("\nEnter para continuar...")
+                    limpiar_pantalla()
+                    slot_ocupado = True
+                    break
+            
+            if slot_ocupado:
+                continue
+            
+            nueva_hora = hora_input
+            break
+        
+        # Verificar si se especificaron cambios
+        if not nuevo_dni and not nueva_fecha and not nueva_hora:
+            print("✖ No se especificaron cambios.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+            return
+        
+        # Todos los datos son válidos, modificar el turno
+        modificar_turno(tid, nuevo_dni, nueva_fecha, nueva_hora)
+        
+    except KeyboardInterrupt:
+        print("\n✖ Operación cancelada por el usuario.")
+        log("INFO", "validar_modificacion_turno", "Operación cancelada por el usuario")
+    except Exception as e:
+        print(f"✖ Error inesperado: {e}")
+        log("ERRO", "validar_modificacion_turno", f"Exception: {e}")
+    finally:
+        input("\nEnter para continuar...")
+        limpiar_pantalla()
+
+
 def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None):
     """
-    Modifica el DNI, la fecha y/o la hora de un turno existente,
-    realizando todas las validaciones necesarias.
+    Modifica el DNI, la fecha y/o la hora de un turno existente.
+    NOTA: Esta función asume que los datos ya fueron validados.
     """
     try:
         turnos = cargar_turnos()
         clientes = cargar_clientes()
 
-        # 1. Buscar el turno por ID
+        # Buscar el turno por ID
         turno_a_modificar = None
-
         for turno in turnos:
             if turno["id"] == id_turno:
                 turno_a_modificar = turno
+                break
+        
         if not turno_a_modificar:
             print(f"✖ No se encontró un turno con ID {id_turno}.")
             return
 
-        # 2. Verificar si se pidio algun cambio
-        if not nuevo_dni and not nueva_fecha and not nueva_hora:
-            print("✖ No se especificaron cambios.")
-            return
-
-        # 3. Determinar el estado "final" del turno para validaciones
-        # Usamos el valor nuevo si se proveyó, o el valor actual si no.
-        fecha_final = nueva_fecha or turno_a_modificar['fecha']
-        hora_final = nueva_hora or turno_a_modificar['hora']
-
         cambios_realizados = []
 
-        # 4. Validar DNI (si se cambió)
-        if nuevo_dni:
-            if not validar_dni(nuevo_dni):
-                print(f"✖ DNI {nuevo_dni} no tiene un formato válido.")
-                return
-            if not _cliente_activo(clientes, nuevo_dni):
-                print(f"✖ Cliente con DNI {nuevo_dni} no existe o está inactivo.")
-                return
-
-        # 5. Validar Slot (Fecha/Hora) (si se cambió alguno de los dos)
-        # Solo validamos el slot si la fecha o la hora son distintas al original
-        if nueva_fecha or nueva_hora:
-            
-            # Validar formatos
-            if nueva_fecha and not validar_fecha(nueva_fecha):
-                print(f"✖ Fecha {nueva_fecha} inválida. Formato YYYY-MM-DD.")
-                return
-            if nueva_hora and not validar_hora(nueva_hora):
-                print(f"✖ Hora {nueva_hora} inválida. Formato HH:mm.")
-                return
-
-            # Validar disponibilidad del slot (usando los valores finales)
-            if _slot_bloqueado(fecha_final, hora_final):
-                print(f"✖ El horario {fecha_final} {hora_final} está BLOQUEADO.")
-                return
-            
-            # Validamos que no exista OTRO turno (excluyendo el actual)
-            for t in turnos:
-                if t["id"] != id_turno and \
-                   t["fecha"] == fecha_final and \
-                   t["hora"] == hora_final and \
-                   t["estado"] == "Ocupado":
-                    print(f"✖ El horario {fecha_final} {hora_final} ya está OCUPADO por otro turno.")
-                    return
-
-        # 6. Aplicar los cambios (si todas las validaciones pasaron)
+        # Aplicar los cambios
         if nuevo_dni:
             turno_a_modificar['dni'] = nuevo_dni
             cambios_realizados.append(f"DNI a {nuevo_dni}")
@@ -401,15 +659,9 @@ def modificar_turno(id_turno, nuevo_dni=None, nueva_fecha=None, nueva_hora=None)
     except KeyError as e:
         print(f"✖ Error: Faltan datos en el registro del turno/cliente: {e}")
         log("ERRO", "modificar_turno", f"KeyError: {e}")
-    except KeyboardInterrupt:
-        print("\n✖ Operación cancelada por el usuario.")
-        log("INFO", "modificar_turno", "Operación cancelada por el usuario")
     except Exception as e:
         print(f"✖ Error inesperado al modificar el turno: {e}")
         log("ERRO", "modificar_turno", f"Exception: {e}")
-    finally:
-        input("\nEnter para continuar...")
-        limpiar_pantalla()
 
 
 

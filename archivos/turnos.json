@@ -68,5 +68,19 @@
     "fecha": "2025-11-27",
     "hora": "10:00",
     "estado": "Ocupado"
+  },
+  {
+    "id": 12,
+    "dni": "38997432",
+    "fecha": "2025-11-30",
+    "hora": "11:00",
+    "estado": "Ocupado"
+  },
+  {
+    "id": 13,
+    "dni": "34137129",
+    "fecha": "2025-11-29",
+    "hora": "09:00",
+    "estado": "Ocupado"
   }
 ]

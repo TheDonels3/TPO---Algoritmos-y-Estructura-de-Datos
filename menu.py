@@ -1,7 +1,7 @@
 from utils import limpiar_pantalla
 from storage import ver_log
-from clientes import validar_alta_cliente,validar_modificacion_cliente,listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
-from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
+from clientes import validar_alta_cliente,validar_modificacion_cliente,listar_clientes, baja_logica_cliente, baja_fisica_cliente
+from turnos import validar_alta_turno, validar_modificacion_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
 def mostrar_bienvenida():
@@ -170,10 +170,7 @@ def run_loop():
                         "│           === CREAR NUEVO TURNO ===           │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
-                    dni = input("DNI cliente: ").strip()
-                    fecha = input("Fecha (YYYY-MM-DD): ").strip()
-                    hora = input("Hora (HH:mm): ").strip()
-                    alta_turno(dni, fecha, hora)
+                    validar_alta_turno()
 
                 # Listar todos los turnos
                 elif opc == "2":
@@ -219,21 +216,7 @@ def run_loop():
                         "│            === MODIFICAR TURNO ===            │\n"
                         "└──────────────────────────────────────────────────┘"
                     )
-                    try:
-                        tid = int(input("ID de turno a modificar: ").strip())
-                    except ValueError:
-                        print("✖ ID invalido. Debe ser un numero.")
-                        input("Enter...")
-                        limpiar_pantalla()
-                        continue
-
-                    print(f"\nModificando Turno ID: {tid}. Deje vacío para no cambiar.")
-                    nuevo_dni = input("Nuevo DNI (vacio=no cambia): ").strip() or None
-                    nueva_fecha = input("Nueva fecha (YYYY-MM-DD, vacio=no): ").strip() or None
-                    nueva_hora = input("Nueva hora (HH:mm, vacio=no): ").strip() or None
-
-                    # Llamada a la funcion de modificacion
-                    modificar_turno(tid, nuevo_dni, nueva_fecha, nueva_hora)
+                    validar_modificacion_turno()
 
                 # Eliminar un turno existente
                 elif opc == "6":

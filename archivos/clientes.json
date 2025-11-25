@@ -94,5 +94,21 @@
     "email": "julio@gmail.com",
     "telefono": "",
     "activo": true
+  },
+  "38997432": {
+    "dni": "38997432",
+    "nombre": "Juan",
+    "apellido": "Pepe",
+    "email": "juan@gmail.com",
+    "telefono": "",
+    "activo": true
+  },
+  "34123432": {
+    "dni": "34123432",
+    "nombre": "Walter",
+    "apellido": "Navarro",
+    "email": "wnavarrete@gmail.com",
+    "telefono": "11334455",
+    "activo": false
   }
 }

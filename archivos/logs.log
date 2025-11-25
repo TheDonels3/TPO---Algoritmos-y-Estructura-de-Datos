@@ -1,2 +1,10 @@
 2025-11-25 14:35:30 | INFO | enviar_mensaje | Correo enviado a walter@gmail.com
 2025-11-25 14:45:23 | INFO | alta_cliente | Cliente DNI 16883453 registrado correctamente
+2025-11-25 15:34:05 | INFO | alta_cliente | Cliente DNI 38997432 registrado correctamente
+2025-11-25 15:42:31 | INFO | enviar_mensaje | Correo enviado a juan@gmail.com
+2025-11-25 15:42:32 | INFO | alta_turno | Correo de confirmación enviado a juan@gmail.com para turno ID 12
+2025-11-25 15:51:41 | INFO | alta_cliente | Cliente DNI 34123432 registrado correctamente
+2025-11-25 15:52:33 | INFO | modificar_cliente | Cliente DNI 34123432 modificado correctamente
+2025-11-25 15:53:04 | INFO | baja_logica_cliente | Cliente DNI 34123432 marcado como inactivo
+2025-11-25 15:53:47 | INFO | enviar_mensaje | Correo enviado a walter@gmail.com
+2025-11-25 15:53:47 | INFO | alta_turno | Correo de confirmación enviado a walter@gmail.com para turno ID 13

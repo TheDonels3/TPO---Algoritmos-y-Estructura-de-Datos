@@ -38,7 +38,11 @@ def validar_alta_cliente():
 
         # Bucle para solicitar DNI hasta que sea válido
         while True:
-            dni = input("DNI: ").strip()
+            dni = input("DNI (o 'c' para cancelar): ").strip()
+            
+            if dni.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
             
             # Verifica que el DNI sea valido
             if not validar_dni(dni):
@@ -57,7 +61,12 @@ def validar_alta_cliente():
         
         # Bucle para solicitar Nombre hasta que no esté vacío
         while True:
-            nombre = input("Nombre: ").strip()
+            nombre = input("Nombre (o 'c' para cancelar): ").strip()
+            
+            if nombre.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
             if nombre:
                 break
             print("✖ El nombre es obligatorio.")
@@ -66,7 +75,12 @@ def validar_alta_cliente():
         
         # Bucle para solicitar Apellido hasta que no esté vacío
         while True:
-            apellido = input("Apellido: ").strip()
+            apellido = input("Apellido (o 'c' para cancelar): ").strip()
+            
+            if apellido.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
             if apellido:
                 break
             print("✖ El apellido es obligatorio.")
@@ -75,7 +89,12 @@ def validar_alta_cliente():
         
         # Bucle para solicitar Email (opcional) hasta que sea válido
         while True:
-            email = input("Email (opcional): ").strip().lower()
+            email = input("Email (opcional, 'c' para cancelar): ").strip().lower()
+            
+            if email == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
             if email == "":
                 break
             
@@ -108,7 +127,11 @@ def validar_modificacion_cliente():
         clientes = cargar_clientes()
          # Bucle para solicitar DNI hasta que sea válido y exista
         while True:
-            dni = input("DNI del cliente a modificar: ").strip()
+            dni = input("DNI del cliente a modificar (o 'c' para cancelar): ").strip()
+            
+            if dni.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
             
             # Verifica que el DNI sea valido
             if not validar_dni(dni):
@@ -134,7 +157,6 @@ def validar_modificacion_cliente():
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
-
 
 def alta_cliente(dni, nombre, apellido, email, telefono):
     try:
@@ -165,7 +187,6 @@ def alta_cliente(dni, nombre, apellido, email, telefono):
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
-
 
 def listar_clientes(solo_activos=False):
     try:
@@ -198,7 +219,6 @@ def listar_clientes(solo_activos=False):
         input("\nEnter para continuar...")
         limpiar_pantalla()
 
-
 def modificar_cliente(dni):
     try:
         # Carga los clientes desde el archivo
@@ -224,7 +244,12 @@ def modificar_cliente(dni):
         
         # Solicita y valida nombre
         while True:
-            nombre = input(f"Nombre [{c['nombre']}]: ").strip()
+            nombre = input(f"Nombre [{c['nombre']}] (vacío=mantener, 'c'=cancelar): ").strip()
+            
+            if nombre.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
             if nombre == "":
                 nombre = c['nombre']
                 break
@@ -236,7 +261,12 @@ def modificar_cliente(dni):
         
         # Solicita y valida apellido
         while True:
-            apellido = input(f"Apellido [{c['apellido']}]: ").strip()
+            apellido = input(f"Apellido [{c['apellido']}] (vacío=mantener, 'c'=cancelar): ").strip()
+            
+            if apellido.lower() == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
             if apellido == "":
                 apellido = c['apellido']
                 break
@@ -248,7 +278,12 @@ def modificar_cliente(dni):
         
         # Solicita y valida email
         while True:
-            email_input = input(f"Email [{c['email']}]: ").strip().lower()
+            email_input = input(f"Email [{c['email']}] (vacío=mantener, 'c'=cancelar): ").strip().lower()
+            
+            if email_input == 'c':
+                print("✖ Operación cancelada.")
+                return
+            
             if email_input == "":
                 email = c['email']
                 break
@@ -308,7 +343,6 @@ def modificar_cliente(dni):
         input("\nEnter para continuar...")
         limpiar_pantalla()
 
-
 def baja_logica_cliente(dni):
     try:
         # Carga los clientes desde el archivo
@@ -337,7 +371,6 @@ def baja_logica_cliente(dni):
     finally:
         input("\nEnter para continuar...")
         limpiar_pantalla()
-
 
 def baja_fisica_cliente(dni):
     try:
