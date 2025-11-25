@@ -63,3 +63,6 @@ def validar_fecha(fecha):
 def validar_hora(hora):
     return bool(RE_HORA.match(hora))
 
+
+
+
