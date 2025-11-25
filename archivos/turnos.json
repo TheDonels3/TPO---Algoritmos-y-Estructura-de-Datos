@@ -1,44 +1,9 @@
 [
   {
-    "id": 2,
-    "dni": "46586383",
-    "fecha": "2025-11-11",
-    "hora": "12:00",
-    "estado": "Ocupado"
-  },
-  {
-    "id": 3,
-    "dni": "44452150",
-    "fecha": "2025-11-16",
-    "hora": "17:00",
-    "estado": "Ocupado"
-  },
-  {
-    "id": 4,
-    "dni": "44452150",
-    "fecha": "2025-11-28",
-    "hora": "18:00",
-    "estado": "Ocupado"
-  },
-  {
-    "id": 5,
-    "dni": "44452150",
-    "fecha": "2025-11-05",
-    "hora": "15:00",
-    "estado": "Ocupado"
-  },
-  {
-    "id": 6,
-    "dni": "44452150",
-    "fecha": "2025-11-12",
-    "hora": "15:00",
-    "estado": "Ocupado"
-  },
-  {
-    "id": 7,
-    "dni": "44452150",
-    "fecha": "2025-11-18",
-    "hora": "15:00",
+    "id": 1,
+    "dni": "Bloqueado",
+    "fecha": "2025-11-24",
+    "hora": "11:00",
     "estado": "Ocupado"
   }
 ]

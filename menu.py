@@ -30,7 +30,6 @@ def menu_ppal():
     )
 
 
-
 # MENU DE OPCIONES PARA CLIENTES
 def menu_clientes():
     print(

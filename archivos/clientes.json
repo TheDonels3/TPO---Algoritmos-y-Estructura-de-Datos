@@ -1,49 +1,17 @@
 {
-  "34137129": {
-    "dni": "34137129",
-    "nombre": "Walter",
-    "apellido": "Navarrete",
-    "email": "walter@gmail.com",
-    "telefono": "1537588933",
-    "activo": false
-  },
-  "22344567": {
-    "dni": "22344567",
-    "nombre": "Mateo",
-    "apellido": "Ruiz",
-    "email": "correo@gmail.com",
-    "telefono": "33445566",
-    "activo": true
-  },
-  "44556677": {
-    "dni": "44556677",
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "email": "",
-    "telefono": "",
-    "activo": true
-  },
   "46586383": {
     "dni": "46586383",
-    "nombre": "Daniel",
-    "apellido": "Dere",
+    "nombre": "daniel",
+    "apellido": "dere",
     "email": "danieldere4117@gmail.com",
-    "telefono": "1144377965",
+    "telefono": "11 2473-6980",
     "activo": true
   },
-  "44452150": {
-    "dni": "44452150",
-    "nombre": "Mateo",
-    "apellido": "Suarez",
-    "email": "matema9242002@gmail.com",
-    "telefono": "1158426556",
-    "activo": true
-  },
-  "43522440": {
-    "dni": "43522440",
-    "nombre": "Sebastian",
-    "apellido": "Bevitore",
-    "email": "",
+  "4685683": {
+    "dni": "4685683",
+    "nombre": "daniel",
+    "apellido": "dere",
+    "email": "danieldere7@gmail.com",
     "telefono": "",
     "activo": true
   }
