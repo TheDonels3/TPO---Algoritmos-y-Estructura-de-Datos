@@ -46,5 +46,37 @@
     "email": "",
     "telefono": "",
     "activo": true
+  },
+  "37995721": {
+    "dni": "37995721",
+    "nombre": "Fran",
+    "apellido": "Navarrete",
+    "email": "",
+    "telefono": "",
+    "activo": false
+  },
+  "3534534": {
+    "dni": "3534534",
+    "nombre": "",
+    "apellido": "",
+    "email": "",
+    "telefono": "",
+    "activo": true
+  },
+  "37998573": {
+    "dni": "37998573",
+    "nombre": "mario",
+    "apellido": "perez",
+    "email": "",
+    "telefono": "",
+    "activo": true
+  },
+  "34556321": {
+    "dni": "34556321",
+    "nombre": "Juan Cruz",
+    "apellido": "Martinez",
+    "email": "",
+    "telefono": "",
+    "activo": false
   }
 }

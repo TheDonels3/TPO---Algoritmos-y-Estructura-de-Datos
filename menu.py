@@ -1,5 +1,5 @@
 from utils import limpiar_pantalla
-from clientes import val_alta_cliente, listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
+from clientes import val_alta_cliente,val_modificacion_cliente,listar_clientes, modificar_cliente, baja_logica_cliente, baja_fisica_cliente
 from turnos import alta_turno, eliminar_turno_por_id, listar_turnos, listar_por_fecha, desbloquear_slot, listar_por_dni, modificar_turno, bloquear_slot
 
 # MUESTRA EL MENSAJE DE BIENVENIDA INICIAL
@@ -92,8 +92,9 @@ def run_loop():
 
                 # Modificar datos de cliente existente
                 elif opc == "4":
-                    dni = input("DNI a modificar: ").strip()
-                    modificar_cliente(dni)
+                    val_modificacion_cliente()
+                    # dni = input("DNI a modificar: ").strip()
+                    # modificar_cliente(dni)
 
                 # Baja logica (desactiva cliente sin borrarlo)
                 elif opc == "5":

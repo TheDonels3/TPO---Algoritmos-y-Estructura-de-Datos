@@ -9,23 +9,42 @@ def val_alta_cliente():
         # Carga los clientes desde el archivo
         clientes = cargar_clientes()
 
-        dni = input("DNI: ").strip()
+        # Bucle para solicitar DNI hasta que sea válido
+        while True:
+            dni = input("DNI: ").strip()
+            
+            # Verifica que el DNI sea valido
+            if not validar_dni(dni):
+                print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            # Verifica si el DNI ya existe
+            if dni in clientes:
+                print("✖ Ya existe un cliente con ese DNI.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            # DNI válido y único, salir del bucle
+            break
         
-        # Verifica que el DNI sea valido
-        if not validar_dni(dni):
-            print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
+        # Bucle para solicitar Nombre hasta que no esté vacío
+        while True:
+            nombre = input("Nombre: ").strip()
+            if nombre:
+                break
+            print("✖ El nombre es obligatorio.")
             input("\nEnter para continuar...")
             limpiar_pantalla()
-            return
-        # Verifica si el DNI ya existe
-        if dni in clientes:
-            print("✖ Ya existe un cliente con ese DNI.")
+        
+        # Bucle para solicitar Apellido hasta que no esté vacío
+        while True:
+            apellido = input("Apellido: ").strip()
+            if apellido:
+                break
+            print("✖ El apellido es obligatorio.")
             input("\nEnter para continuar...")
             limpiar_pantalla()
-            return
-        
-        nombre = input("Nombre: ").strip()
-        apellido = input("Apellido: ").strip()
         
         email = input("Email (opcional): ").strip().lower()
         if email != "":
@@ -47,6 +66,37 @@ def val_alta_cliente():
         
         alta_cliente(dni,nombre,apellido, email, tel)
 
+    except (AttributeError, ValueError):
+        print("✖ Error: Valores invalidos proporcionados.")
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+    finally:
+        input("\nEnter para continuar...")
+        limpiar_pantalla()
+
+def val_modificacion_cliente():
+    try:
+         # Carga los clientes desde el archivo
+        clientes = cargar_clientes()
+         # Bucle para solicitar DNI hasta que sea válido y exista
+        while True:
+            dni = input("DNI del cliente a modificar: ").strip()
+            
+            # Verifica que el DNI sea valido
+            if not validar_dni(dni):
+                print("✖ DNI invalido. Deben ser 7 u 8 digitos.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            # Verifica si el DNI existe
+            if dni not in clientes:
+                print("✖ No existe un cliente con ese DNI.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            # DNI válido y existe, salir del bucle
+            break
+        modificar_cliente(dni)
     except (AttributeError, ValueError):
         print("✖ Error: Valores invalidos proporcionados.")
     except Exception as e:
@@ -157,25 +207,101 @@ def modificar_cliente(dni):
             input("\nEnter...")
             limpiar_pantalla()
             return
+        
+        print("\n=== Datos actuales del cliente ===")
+        print(f"DNI: {c['dni']}")
+        print(f"Nombre: {c['nombre']}")
+        print(f"Apellido: {c['apellido']}")
+        print(f"Email: {c['email']}")
+        print(f"Teléfono: {c['telefono']}")
+        print(f"Estado: {'Activo' if c['activo'] else 'Inactivo'}")
+        print("\n=== Ingrese los nuevos datos ===")
+        print("(Dejar vacío para mantener el valor actual)\n")
+        
+        # Solicita y valida nombre
+        while True:
+            nombre = input(f"Nombre [{c['nombre']}]: ").strip()
+            if nombre == "":
+                nombre = c['nombre']
+                break
+            if nombre:
+                break
+            print("✖ El nombre no puede estar vacío si desea modificarlo.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+        
+        # Solicita y valida apellido
+        while True:
+            apellido = input(f"Apellido [{c['apellido']}]: ").strip()
+            if apellido == "":
+                apellido = c['apellido']
+                break
+            if apellido:
+                break
+            print("✖ El apellido no puede estar vacío si desea modificarlo.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+        
+        # Solicita y valida email
+        while True:
+            email_input = input(f"Email [{c['email']}]: ").strip().lower()
+            if email_input == "":
+                email = c['email']
+                break
             
-        # Solicita nuevos datos, dejando vacio para mantener el actual
-        print("Dejar vacio para mantener el valor actual.")
-        nombre = input(f"Nombre ({c['nombre']}): ").strip() or c['nombre']
-        apellido = input(f"Apellido ({c['apellido']}): ").strip() or c['apellido']
-        email = input(f"Email ({c['email']}): ").strip() or c['email']
-        tel = input(f"Telefono ({c['telefono']}): ").strip() or c['telefono']
-        activo_in = input(f"Activo? (S/N) actual={ 'S' if c['activo'] else 'N' }: ").strip().lower()
+            # Validar formato de email si no está vacío
+            if email_input and not validarEmail(email_input):
+                print("✖ EMAIL inválido. Debe ser una dirección de Gmail válida.")
+                input("\nEnter para continuar...")
+                limpiar_pantalla()
+                continue
+            
+            # Verificar si el email ya existe en otro cliente
+            email_duplicado = False
+            for dni_cliente, cliente in clientes.items():
+                if dni_cliente != dni and cliente.get("email", "") == email_input:
+                    print("✖ Ya existe otro cliente con ese email Gmail.")
+                    input("\nEnter para continuar...")
+                    limpiar_pantalla()
+                    email_duplicado = True
+                    break
+            
+            if email_duplicado:
+                continue
+            
+            email = email_input
+            break
         
-        # Actualiza el estado activo si el usuario lo cambia
-        if activo_in in ('s', 'n'):
-            c['activo'] = (activo_in == 's')
+        # Solicita teléfono
+        tel = input(f"Teléfono [{c['telefono']}]: ").strip()
+        if tel == "":
+            tel = c['telefono']
         
-        # Actualiza los demas campos
-        c.update({"nombre": nombre, "apellido": apellido, "email": email, "telefono": tel})
+        # Solicita estado activo
+        while True:
+            activo_in = input(f"Activo? (S/N) [{ 'S' if c['activo'] else 'N' }]: ").strip().lower()
+            if activo_in == "":
+                activo = c['activo']
+                break
+            if activo_in in ('s', 'n'):
+                activo = (activo_in == 's')
+                break
+            print("✖ Ingrese 'S' para Sí o 'N' para No.")
+            input("\nEnter para continuar...")
+            limpiar_pantalla()
+        
+        # Actualiza los campos
+        c.update({
+            "nombre": nombre,
+            "apellido": apellido,
+            "email": email,
+            "telefono": tel,
+            "activo": activo
+        })
         
         # Guarda los cambios
         guardar_clientes(clientes)
-        print("✔ Cliente actualizado.")
+        print("\n✔ Cliente actualizado correctamente.")
 
     except KeyError as e:
         print(f"✖ Error: Campo faltante en cliente: {e}")
