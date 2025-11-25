@@ -3,6 +3,7 @@ from utils import limpiar_pantalla, validar_fecha, validar_hora, validar_dni
 from storage import cargar_turnos, guardar_turnos, bloqueos_por_fecha, _obtener_next_turno_id, cargar_clientes
 from GMAIL import mensaje_confirmacion
 import smtplib
+from datetime import datetime
 
 
 # ---------------------------------------------------------
@@ -19,6 +20,24 @@ def _existe_turno_en_slot(turnos, fecha, hora):
 # Verifica si un horario específico está bloqueado para una fecha
 def _slot_bloqueado(fecha, hora):
     return hora in bloqueos_por_fecha.get(fecha, set())
+
+
+# Verifica que la fecha y hora del turno sean futuras (no pasadas)
+def _es_fecha_hora_futura(fecha, hora):
+    """
+    Valida que la fecha y hora proporcionadas sean posteriores al momento actual.
+    Retorna True si es futura, False si es pasada.
+    """
+    try:
+        # Combinar fecha y hora en un objeto datetime
+        fecha_hora_turno = datetime.strptime(f"{fecha} {hora}", "%Y-%m-%d %H:%M")
+        # Obtener el momento actual
+        ahora = datetime.now()
+        # Comparar
+        return fecha_hora_turno > ahora
+    except ValueError:
+        # Si hay error al parsear, retornar False por seguridad
+        return False
 
 
 # Verifica si un cliente con un DNI dado está activo en el sistema
@@ -76,6 +95,11 @@ def alta_turno(dni, fecha, hora):
         # Validación del formato de hora (debe ser HH:mm)
         if not validar_hora(hora):
             print("✖ Hora inválida. Formato esperado HH:mm.")
+            return
+        
+        # Validación de que la fecha y hora sean futuras
+        if not _es_fecha_hora_futura(fecha, hora):
+            print("✖ No se puede agendar un turno en una fecha y hora pasadas.")
             return
         
         # Verificación de que el cliente exista y esté activo
