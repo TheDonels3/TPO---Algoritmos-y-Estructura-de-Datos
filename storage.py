@@ -8,9 +8,12 @@ TURNS_JSON = "archivos/turnos.json"
 # ========== FUNCIONES PARA CLIENTES ==========
 def cargar_clientes():
     """Carga clientes desde el archivo JSON"""
-    if os.path.exists(CLIENTES_JSON):
+    ruta_actual = os.path.dirname(os.path.abspath(__file__))
+    ruta_completa = os.path.join(ruta_actual, CLIENTES_JSON)
+    
+    if os.path.exists(ruta_completa):
         try:
-            with open(CLIENTES_JSON, 'r', encoding='utf-8') as f:
+            with open(ruta_completa, 'r', encoding='utf-8') as f:
                 return json.load(f) or {}
             
         except (json.JSONDecodeError) as e:
@@ -25,7 +28,10 @@ def cargar_clientes():
 def guardar_clientes(clientes_dict):
     """Guarda clientes en el archivo JSON"""
     try:
-        with open(CLIENTES_JSON, 'w', encoding='utf-8') as f:
+        ruta_actual = os.path.dirname(os.path.abspath(__file__))
+        ruta_completa = os.path.join(ruta_actual, CLIENTES_JSON)
+
+        with open(ruta_completa, 'w', encoding='utf-8') as f:
             json.dump(clientes_dict, f, ensure_ascii=False, indent=2)
         return True
     
@@ -45,9 +51,12 @@ def _obtener_next_turno_id(turnos):
 
 def cargar_turnos():
     """Carga turnos desde el archivo JSON y devuelve la lista de turnos."""
-    if os.path.exists(TURNS_JSON):
+    ruta_actual = os.path.dirname(os.path.abspath(__file__))
+    ruta_completa = os.path.join(ruta_actual, TURNS_JSON)
+    
+    if os.path.exists(ruta_completa):
         try:
-            with open(TURNS_JSON, 'r', encoding='utf-8') as f:
+            with open(ruta_completa, 'r', encoding='utf-8') as f:
                 return json.load(f) or []
             
         except (json.JSONDecodeError) as e:
@@ -62,7 +71,10 @@ def cargar_turnos():
 def guardar_turnos(turnos_list):
     """Guarda la lista de turnos en el archivo JSON."""
     try:
-        with open(TURNS_JSON, 'w', encoding='utf-8') as f:
+        ruta_actual = os.path.dirname(os.path.abspath(__file__))
+        ruta_completa = os.path.join(ruta_actual, TURNS_JSON)
+        
+        with open(ruta_completa, 'w', encoding='utf-8') as f:
             json.dump(turnos_list, f, ensure_ascii=False, indent=2)
         return True
     
